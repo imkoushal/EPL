@@ -1,0 +1,406 @@
+Note: EPL DataFrame Package - Pandas-like data manipulation in plain English
+Note: Import "epl-dataframe" to use these functions.
+
+Note: ===========================================================
+Note:  DataFrame Creation
+Note: ===========================================================
+
+Define Function create_dataframe Takes data
+    Note: Create a DataFrame from a dictionary of columns
+    Note: Example: Create DataFrame from {"name": ["Alice", "Bob"], "age": [25, 30]}
+    Return python_call("epl_dataframe", "create_dataframe", data)
+End
+
+Define Function create_from_lists Takes column_names, column_data
+    Note: Create a DataFrame from column names and data lists
+    Note: Example: Create from lists ["name", "age"] and [["Alice", "Bob"], [25, 30]]
+    Return python_call("epl_dataframe", "from_lists", column_names, column_data)
+End
+
+Define Function dataframe_from_records Takes records
+    Note: Create a DataFrame from a list of dictionaries (records)
+    Note: Example: DataFrame from records [{"name": "Alice", "age": 25}, {"name": "Bob", "age": 30}]
+    Return python_call("epl_dataframe", "from_records", records)
+End
+
+Define Function read_csv Takes filepath
+    Note: Read a CSV file into a DataFrame
+    Note: Example: Read CSV "data.csv"
+    Return python_call("epl_dataframe", "read_csv", filepath)
+End
+
+Define Function read_json Takes filepath
+    Note: Read a JSON file into a DataFrame
+    Note: Example: Read JSON "data.json"
+    Return python_call("epl_dataframe", "read_json", filepath)
+End
+
+Define Function read_excel Takes filepath
+    Note: Read an Excel file into a DataFrame
+    Note: Example: Read Excel "data.xlsx"
+    Return python_call("epl_dataframe", "read_excel", filepath)
+End
+
+Note: ===========================================================
+Note:  DataFrame Properties
+Note: ===========================================================
+
+Define Function columns_of Takes df
+    Note: Get column names of a DataFrame
+    Note: Example: Columns of my_dataframe
+    Return python_call("epl_dataframe", "columns", df)
+End
+
+Define Function rows_of Takes df
+    Note: Get number of rows in a DataFrame
+    Note: Example: Rows of my_dataframe
+    Return python_call("epl_dataframe", "row_count", df)
+End
+
+Define Function shape_of_dataframe Takes df
+    Note: Get shape (rows, columns) of a DataFrame
+    Note: Example: Shape of my_dataframe
+    Return python_call("epl_dataframe", "shape", df)
+End
+
+Define Function data_types_of Takes df
+    Note: Get data types of each column
+    Note: Example: Data types of my_dataframe
+    Return python_call("epl_dataframe", "dtypes", df)
+End
+
+Define Function describe_dataframe Takes df
+    Note: Get statistical summary of numeric columns
+    Note: Example: Describe my_dataframe
+    Return python_call("epl_dataframe", "describe", df)
+End
+
+Define Function head_of Takes df, n
+    Note: Get first n rows of a DataFrame
+    Note: Example: Head of my_dataframe with 5
+    Return python_call("epl_dataframe", "head", df, n)
+End
+
+Define Function tail_of Takes df, n
+    Note: Get last n rows of a DataFrame
+    Note: Example: Tail of my_dataframe with 5
+    Return python_call("epl_dataframe", "tail", df, n)
+End
+
+Define Function info_of Takes df
+    Note: Get info about DataFrame (columns, types, memory)
+    Note: Example: Info of my_dataframe
+    Return python_call("epl_dataframe", "info", df)
+End
+
+Note: ===========================================================
+Note:  Column Selection
+Note: ===========================================================
+
+Define Function select_column Takes df, column_name
+    Note: Select a single column from a DataFrame
+    Note: Example: Select column "name" from my_dataframe
+    Return python_call("epl_dataframe", "select_column", df, column_name)
+End
+
+Define Function select_columns Takes df, column_names
+    Note: Select multiple columns from a DataFrame
+    Note: Example: Select columns ["name", "age"] from my_dataframe
+    Return python_call("epl_dataframe", "select_columns", df, column_names)
+End
+
+Define Function drop_column Takes df, column_name
+    Note: Remove a column from a DataFrame
+    Note: Example: Drop column "temp" from my_dataframe
+    Return python_call("epl_dataframe", "drop_column", df, column_name)
+End
+
+Define Function drop_columns Takes df, column_names
+    Note: Remove multiple columns from a DataFrame
+    Note: Example: Drop columns ["temp", "extra"] from my_dataframe
+    Return python_call("epl_dataframe", "drop_columns", df, column_names)
+End
+
+Define Function rename_column Takes df, old_name, new_name
+    Note: Rename a column in a DataFrame
+    Note: Example: Rename column "old" to "new" in my_dataframe
+    Return python_call("epl_dataframe", "rename_column", df, old_name, new_name)
+End
+
+Define Function rename_columns Takes df, name_mapping
+    Note: Rename multiple columns using a mapping
+    Note: Example: Rename columns {"old1": "new1", "old2": "new2"} in my_dataframe
+    Return python_call("epl_dataframe", "rename_columns", df, name_mapping)
+End
+
+Note: ===========================================================
+Note:  Row Selection & Filtering
+Note: ===========================================================
+
+Define Function select_rows Takes df, start_idx, end_idx
+    Note: Select rows by index range
+    Note: Example: Select rows 0 to 10 from my_dataframe
+    Return python_call("epl_dataframe", "select_rows", df, start_idx, end_idx)
+End
+
+Define Function filter_where Takes df, column, operator, value
+    Note: Filter rows where column matches condition
+    Note: Example: Filter where "age" > 25 in my_dataframe
+    Return python_call("epl_dataframe", "filter_where", df, column, operator, value)
+End
+
+Define Function filter_equals Takes df, column, value
+    Note: Filter rows where column equals value
+    Note: Example: Filter where "status" equals "active" in my_dataframe
+    Return python_call("epl_dataframe", "filter_equals", df, column, value)
+End
+
+Define Function filter_in Takes df, column, values
+    Note: Filter rows where column value is in a list
+    Note: Example: Filter where "category" in ["A", "B", "C"] in my_dataframe
+    Return python_call("epl_dataframe", "filter_in", df, column, values)
+End
+
+Define Function filter_not_null Takes df, column
+    Note: Filter rows where column is not null
+    Note: Example: Filter not null "email" in my_dataframe
+    Return python_call("epl_dataframe", "filter_not_null", df, column)
+End
+
+Define Function filter_contains Takes df, column, substring
+    Note: Filter rows where column contains substring
+    Note: Example: Filter where "name" contains "son" in my_dataframe
+    Return python_call("epl_dataframe", "filter_contains", df, column, substring)
+End
+
+Define Function sample_rows Takes df, n
+    Note: Get n random rows from a DataFrame
+    Note: Example: Sample 10 rows from my_dataframe
+    Return python_call("epl_dataframe", "sample", df, n)
+End
+
+Note: ===========================================================
+Note:  Adding & Modifying Data
+Note: ===========================================================
+
+Define Function add_column Takes df, column_name, values
+    Note: Add a new column with given values
+    Note: Example: Add column "score" with [90, 85, 78] to my_dataframe
+    Return python_call("epl_dataframe", "add_column", df, column_name, values)
+End
+
+Define Function add_calculated_column Takes df, column_name, expression
+    Note: Add a column calculated from other columns
+    Note: Example: Add column "total" as "price * quantity" to my_dataframe
+    Return python_call("epl_dataframe", "add_calculated_column", df, column_name, expression)
+End
+
+Define Function set_value Takes df, row, column, value
+    Note: Set a specific cell value
+    Note: Example: Set value at row 0, column "name" to "Alice"
+    Return python_call("epl_dataframe", "set_value", df, row, column, value)
+End
+
+Define Function fill_null Takes df, value
+    Note: Fill all null values with a specific value
+    Note: Example: Fill null with 0 in my_dataframe
+    Return python_call("epl_dataframe", "fill_null", df, value)
+End
+
+Define Function fill_null_column Takes df, column, value
+    Note: Fill null values in a specific column
+    Note: Example: Fill null in "age" with 0 in my_dataframe
+    Return python_call("epl_dataframe", "fill_null_column", df, column, value)
+End
+
+Define Function drop_null_rows Takes df
+    Note: Remove rows with any null values
+    Note: Example: Drop null rows from my_dataframe
+    Return python_call("epl_dataframe", "drop_null_rows", df)
+End
+
+Define Function drop_duplicate_rows Takes df
+    Note: Remove duplicate rows
+    Note: Example: Drop duplicates from my_dataframe
+    Return python_call("epl_dataframe", "drop_duplicates", df)
+End
+
+Note: ===========================================================
+Note:  Sorting
+Note: ===========================================================
+
+Define Function sort_by Takes df, column, ascending
+    Note: Sort DataFrame by a column
+    Note: Example: Sort by "age" ascending True in my_dataframe
+    Return python_call("epl_dataframe", "sort_by", df, column, ascending)
+End
+
+Define Function sort_by_columns Takes df, columns, ascending
+    Note: Sort DataFrame by multiple columns
+    Note: Example: Sort by ["category", "date"] ascending [True, False]
+    Return python_call("epl_dataframe", "sort_by_columns", df, columns, ascending)
+End
+
+Note: ===========================================================
+Note:  Grouping & Aggregation
+Note: ===========================================================
+
+Define Function group_by Takes df, columns
+    Note: Group DataFrame by columns (returns a grouped object)
+    Note: Example: Group by "category" in my_dataframe
+    Return python_call("epl_dataframe", "group_by", df, columns)
+End
+
+Define Function group_and_sum Takes df, group_column, sum_column
+    Note: Group by a column and sum another column
+    Note: Example: Group by "category" and sum "sales"
+    Return python_call("epl_dataframe", "group_and_sum", df, group_column, sum_column)
+End
+
+Define Function group_and_mean Takes df, group_column, mean_column
+    Note: Group by a column and calculate mean of another column
+    Note: Example: Group by "category" and mean "price"
+    Return python_call("epl_dataframe", "group_and_mean", df, group_column, mean_column)
+End
+
+Define Function group_and_count Takes df, group_column
+    Note: Group by a column and count occurrences
+    Note: Example: Group by "category" and count
+    Return python_call("epl_dataframe", "group_and_count", df, group_column)
+End
+
+Define Function aggregate Takes df, group_columns, agg_dict
+    Note: Perform multiple aggregations
+    Note: Example: Aggregate {"sales": "sum", "price": "mean"} grouped by "category"
+    Return python_call("epl_dataframe", "aggregate", df, group_columns, agg_dict)
+End
+
+Define Function value_counts Takes df, column
+    Note: Count occurrences of each unique value
+    Note: Example: Value counts of "category" in my_dataframe
+    Return python_call("epl_dataframe", "value_counts", df, column)
+End
+
+Note: ===========================================================
+Note:  Column Statistics
+Note: ===========================================================
+
+Define Function sum_of_column Takes df, column
+    Note: Sum of a column
+    Note: Example: Sum of column "sales" in my_dataframe
+    Return python_call("epl_dataframe", "col_sum", df, column)
+End
+
+Define Function mean_of_column Takes df, column
+    Note: Mean of a column
+    Note: Example: Mean of column "age" in my_dataframe
+    Return python_call("epl_dataframe", "col_mean", df, column)
+End
+
+Define Function median_of_column Takes df, column
+    Note: Median of a column
+    Note: Example: Median of column "salary" in my_dataframe
+    Return python_call("epl_dataframe", "col_median", df, column)
+End
+
+Define Function min_of_column Takes df, column
+    Note: Minimum value of a column
+    Note: Example: Minimum of column "price" in my_dataframe
+    Return python_call("epl_dataframe", "col_min", df, column)
+End
+
+Define Function max_of_column Takes df, column
+    Note: Maximum value of a column
+    Note: Example: Maximum of column "score" in my_dataframe
+    Return python_call("epl_dataframe", "col_max", df, column)
+End
+
+Define Function std_of_column Takes df, column
+    Note: Standard deviation of a column
+    Note: Example: Std of column "values" in my_dataframe
+    Return python_call("epl_dataframe", "col_std", df, column)
+End
+
+Note: ===========================================================
+Note:  Merging & Joining
+Note: ===========================================================
+
+Define Function merge_dataframes Takes df1, df2, on_column, how
+    Note: Merge two DataFrames on a column
+    Note: Example: Merge df1 and df2 on "id" how "inner"
+    Return python_call("epl_dataframe", "merge", df1, df2, on_column, how)
+End
+
+Define Function join_dataframes Takes df1, df2, how
+    Note: Join two DataFrames by index
+    Note: Example: Join df1 and df2 how "left"
+    Return python_call("epl_dataframe", "join", df1, df2, how)
+End
+
+Define Function concatenate_dataframes Takes dataframes, axis
+    Note: Concatenate DataFrames along an axis (0=rows, 1=columns)
+    Note: Example: Concatenate [df1, df2] along axis 0
+    Return python_call("epl_dataframe", "concat", dataframes, axis)
+End
+
+Note: ===========================================================
+Note:  Pivot & Reshape
+Note: ===========================================================
+
+Define Function pivot_table Takes df, index, columns, values, aggfunc
+    Note: Create a pivot table
+    Note: Example: Pivot table index "date" columns "category" values "sales" aggfunc "sum"
+    Return python_call("epl_dataframe", "pivot_table", df, index, columns, values, aggfunc)
+End
+
+Define Function melt_dataframe Takes df, id_vars, value_vars
+    Note: Unpivot a DataFrame from wide to long format
+    Note: Example: Melt df with id_vars ["name"] value_vars ["jan", "feb", "mar"]
+    Return python_call("epl_dataframe", "melt", df, id_vars, value_vars)
+End
+
+Define Function transpose_dataframe Takes df
+    Note: Transpose a DataFrame (swap rows and columns)
+    Note: Example: Transpose my_dataframe
+    Return python_call("epl_dataframe", "transpose", df)
+End
+
+Note: ===========================================================
+Note:  Export & Save
+Note: ===========================================================
+
+Define Function save_to_csv Takes df, filepath
+    Note: Save DataFrame to CSV file
+    Note: Example: Save my_dataframe to CSV "output.csv"
+    Return python_call("epl_dataframe", "to_csv", df, filepath)
+End
+
+Define Function save_to_json Takes df, filepath
+    Note: Save DataFrame to JSON file
+    Note: Example: Save my_dataframe to JSON "output.json"
+    Return python_call("epl_dataframe", "to_json", df, filepath)
+End
+
+Define Function save_to_excel Takes df, filepath
+    Note: Save DataFrame to Excel file
+    Note: Example: Save my_dataframe to Excel "output.xlsx"
+    Return python_call("epl_dataframe", "to_excel", df, filepath)
+End
+
+Define Function to_dict Takes df
+    Note: Convert DataFrame to dictionary
+    Note: Example: Convert my_dataframe to dict
+    Return python_call("epl_dataframe", "to_dict", df)
+End
+
+Define Function to_records Takes df
+    Note: Convert DataFrame to list of records (dictionaries)
+    Note: Example: Convert my_dataframe to records
+    Return python_call("epl_dataframe", "to_records", df)
+End
+
+Define Function print_dataframe Takes df
+    Note: Print DataFrame in a formatted way
+    Note: Example: Print my_dataframe
+    Return python_call("epl_dataframe", "display", df)
+End

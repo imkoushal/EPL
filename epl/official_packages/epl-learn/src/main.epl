@@ -1,0 +1,364 @@
+Note: EPL Learn Package - Scikit-learn like machine learning in plain English
+Note: Import "epl-learn" to use these functions.
+
+Note: ===========================================================
+Note:  Data Preprocessing
+Note: ===========================================================
+
+Define Function scale_data Takes data
+    Note: Standardize features by removing mean and scaling to unit variance
+    Note: Example: Scale data my_features
+    Return python_call("epl_learn", "standard_scale", data)
+End
+
+Define Function normalize_data Takes data
+    Note: Scale features to [0, 1] range
+    Note: Example: Normalize data my_features
+    Return python_call("epl_learn", "minmax_scale", data)
+End
+
+Define Function encode_labels Takes lbls
+    Note: Encode categorical labels as integers
+    Note: Example: Encode labels ["cat", "dog", "cat"]
+    Return python_call("epl_learn", "label_encode", labels)
+End
+
+Define Function one_hot_encode Takes lbls
+    Note: One-hot encode categorical labels
+    Note: Example: One-hot encode ["red", "blue", "red"]
+    Return python_call("epl_learn", "one_hot_encode", labels)
+End
+
+Define Function split_data Takes X, y, test_size
+    Note: Split data into training and test sets
+    Note: Example: Split data X and y with test_size 0.2
+    Return python_call("epl_learn", "train_test_split", X, y, test_size)
+End
+
+Define Function fill_missing Takes data, strategy
+    Note: Fill missing values (mean, median, most_frequent)
+    Note: Example: Fill missing in data with strategy "mean"
+    Return python_call("epl_learn", "impute", data, strategy)
+End
+
+Define Function reduce_dimensions Takes data, n_components
+    Note: Reduce dimensionality using PCA
+    Note: Example: Reduce dimensions of data to 2 components
+    Return python_call("epl_learn", "pca", data, n_components)
+End
+
+Note: ===========================================================
+Note:  Classification Models
+Note: ===========================================================
+
+Define Function create_logistic_classifier Takes
+    Note: Create a logistic regression classifier
+    Note: Example: Create logistic classifier
+    Return python_call("epl_learn", "create_logistic")
+End
+
+Define Function create_decision_tree_classifier Takes max_depth
+    Note: Create a decision tree classifier
+    Note: Example: Create decision tree classifier with max_depth 5
+    Return python_call("epl_learn", "create_tree_classifier", max_depth)
+End
+
+Define Function create_random_forest_classifier Takes n_trees, max_depth
+    Note: Create a random forest classifier
+    Note: Example: Create random forest classifier with 100 trees max_depth 10
+    Return python_call("epl_learn", "create_rf_classifier", n_trees, max_depth)
+End
+
+Define Function create_svm_classifier Takes kernel
+    Note: Create a support vector machine classifier
+    Note: Example: Create SVM classifier with kernel "rbf"
+    Return python_call("epl_learn", "create_svm", kernel)
+End
+
+Define Function create_knn_classifier Takes n_neighbors
+    Note: Create a k-nearest neighbors classifier
+    Note: Example: Create KNN classifier with 5 neighbors
+    Return python_call("epl_learn", "create_knn_classifier", n_neighbors)
+End
+
+Define Function create_naive_bayes_classifier Takes
+    Note: Create a Gaussian Naive Bayes classifier
+    Note: Example: Create naive bayes classifier
+    Return python_call("epl_learn", "create_naive_bayes")
+End
+
+Define Function create_gradient_boost_classifier Takes n_estimators, learning_rate
+    Note: Create a gradient boosting classifier
+    Note: Example: Create gradient boost classifier with 100 estimators learning_rate 0.1
+    Return python_call("epl_learn", "create_gb_classifier", n_estimators, learning_rate)
+End
+
+Note: ===========================================================
+Note:  Regression Models
+Note: ===========================================================
+
+Define Function create_linear_regressor Takes
+    Note: Create a linear regression model
+    Note: Example: Create linear regressor
+    Return python_call("epl_learn", "create_linear")
+End
+
+Define Function create_ridge_regressor Takes alpha
+    Note: Create a ridge regression model
+    Note: Example: Create ridge regressor with alpha 1.0
+    Return python_call("epl_learn", "create_ridge", alpha)
+End
+
+Define Function create_lasso_regressor Takes alpha
+    Note: Create a lasso regression model
+    Note: Example: Create lasso regressor with alpha 1.0
+    Return python_call("epl_learn", "create_lasso", alpha)
+End
+
+Define Function create_decision_tree_regressor Takes max_depth
+    Note: Create a decision tree regressor
+    Note: Example: Create decision tree regressor with max_depth 5
+    Return python_call("epl_learn", "create_tree_regressor", max_depth)
+End
+
+Define Function create_random_forest_regressor Takes n_trees, max_depth
+    Note: Create a random forest regressor
+    Note: Example: Create random forest regressor with 100 trees max_depth 10
+    Return python_call("epl_learn", "create_rf_regressor", n_trees, max_depth)
+End
+
+Define Function create_svr Takes kernel
+    Note: Create a support vector regressor
+    Note: Example: Create SVR with kernel "rbf"
+    Return python_call("epl_learn", "create_svr", kernel)
+End
+
+Define Function create_knn_regressor Takes n_neighbors
+    Note: Create a k-nearest neighbors regressor
+    Note: Example: Create KNN regressor with 5 neighbors
+    Return python_call("epl_learn", "create_knn_regressor", n_neighbors)
+End
+
+Note: ===========================================================
+Note:  Model Training & Prediction
+Note: ===========================================================
+
+Define Function train_model Takes model, X, y
+    Note: Train a model on data
+    Note: Example: Train model my_classifier on X and y
+    Return python_call("epl_learn", "fit", model, X, y)
+End
+
+Define Function predict Takes model, X
+    Note: Make predictions with a trained model
+    Note: Example: Predict with my_model on X_test
+    Return python_call("epl_learn", "predict", model, X)
+End
+
+Define Function predict_probability Takes model, X
+    Note: Get prediction probabilities (for classifiers)
+    Note: Example: Predict probability with my_classifier on X_test
+    Return python_call("epl_learn", "predict_proba", model, X)
+End
+
+Note: ===========================================================
+Note:  Clustering
+Note: ===========================================================
+
+Define Function kmeans_cluster Takes data, n_clusters
+    Note: Perform K-means clustering
+    Note: Example: K-means cluster data into 3 clusters
+    Return python_call("epl_learn", "kmeans", data, n_clusters)
+End
+
+Define Function dbscan_cluster Takes data, eps, min_samples
+    Note: Perform DBSCAN clustering
+    Note: Example: DBSCAN cluster data with eps 0.5 min_samples 5
+    Return python_call("epl_learn", "dbscan", data, eps, min_samples)
+End
+
+Define Function hierarchical_cluster Takes data, n_clusters
+    Note: Perform hierarchical/agglomerative clustering
+    Note: Example: Hierarchical cluster data into 3 clusters
+    Return python_call("epl_learn", "agglomerative", data, n_clusters)
+End
+
+Define Function get_cluster_labels Takes cluster_result
+    Note: Get cluster labels from clustering result
+    Note: Example: Get cluster labels from kmeans_result
+    Return python_call("epl_learn", "get_labels", cluster_result)
+End
+
+Define Function get_cluster_centers Takes cluster_result
+    Note: Get cluster centers (for K-means)
+    Note: Example: Get cluster centers from kmeans_result
+    Return python_call("epl_learn", "get_centers", cluster_result)
+End
+
+Note: ===========================================================
+Note:  Model Evaluation - Classification
+Note: ===========================================================
+
+Define Function accuracy_score Takes y_true, y_pred
+    Note: Calculate accuracy of predictions
+    Note: Example: Accuracy score of y_test and predictions
+    Return python_call("epl_learn", "accuracy", y_true, y_pred)
+End
+
+Define Function precision_score Takes y_true, y_pred
+    Note: Calculate precision of predictions
+    Note: Example: Precision score of y_test and predictions
+    Return python_call("epl_learn", "precision", y_true, y_pred)
+End
+
+Define Function recall_score Takes y_true, y_pred
+    Note: Calculate recall of predictions
+    Note: Example: Recall score of y_test and predictions
+    Return python_call("epl_learn", "recall", y_true, y_pred)
+End
+
+Define Function f1_score Takes y_true, y_pred
+    Note: Calculate F1 score of predictions
+    Note: Example: F1 score of y_test and predictions
+    Return python_call("epl_learn", "f1", y_true, y_pred)
+End
+
+Define Function confusion_matrix Takes y_true, y_pred
+    Note: Generate confusion matrix
+    Note: Example: Confusion matrix of y_test and predictions
+    Return python_call("epl_learn", "confusion_matrix", y_true, y_pred)
+End
+
+Define Function classification_report Takes y_true, y_pred
+    Note: Generate full classification report
+    Note: Example: Classification report of y_test and predictions
+    Return python_call("epl_learn", "classification_report", y_true, y_pred)
+End
+
+Define Function roc_auc_score Takes y_true, y_scores
+    Note: Calculate ROC AUC score
+    Note: Example: ROC AUC of y_test and prediction_scores
+    Return python_call("epl_learn", "roc_auc", y_true, y_scores)
+End
+
+Note: ===========================================================
+Note:  Model Evaluation - Regression
+Note: ===========================================================
+
+Define Function mean_squared_error Takes y_true, y_pred
+    Note: Calculate mean squared error
+    Note: Example: MSE of y_test and predictions
+    Return python_call("epl_learn", "mse", y_true, y_pred)
+End
+
+Define Function root_mean_squared_error Takes y_true, y_pred
+    Note: Calculate root mean squared error
+    Note: Example: RMSE of y_test and predictions
+    Return python_call("epl_learn", "rmse", y_true, y_pred)
+End
+
+Define Function mean_absolute_error Takes y_true, y_pred
+    Note: Calculate mean absolute error
+    Note: Example: MAE of y_test and predictions
+    Return python_call("epl_learn", "mae", y_true, y_pred)
+End
+
+Define Function r2_score Takes y_true, y_pred
+    Note: Calculate R² (coefficient of determination)
+    Note: Example: R2 score of y_test and predictions
+    Return python_call("epl_learn", "r2", y_true, y_pred)
+End
+
+Note: ===========================================================
+Note:  Cross-Validation
+Note: ===========================================================
+
+Define Function cross_validate Takes model, X, y, cv
+    Note: Perform k-fold cross-validation
+    Note: Example: Cross validate my_model on X and y with 5 folds
+    Return python_call("epl_learn", "cross_val_score", model, X, y, cv)
+End
+
+Define Function grid_search Takes model, X, y, param_grid, cv
+    Note: Perform grid search for hyperparameter tuning
+    Note: Example: Grid search my_model on X and y with param_grid cv 5
+    Return python_call("epl_learn", "grid_search", model, X, y, param_grid, cv)
+End
+
+Note: ===========================================================
+Note:  Feature Selection
+Note: ===========================================================
+
+Define Function select_k_best Takes X, y, k
+    Note: Select k best features using statistical tests
+    Note: Example: Select 5 best features from X based on y
+    Return python_call("epl_learn", "select_k_best", X, y, k)
+End
+
+Define Function feature_importance Takes model
+    Note: Get feature importances from a trained tree-based model
+    Note: Example: Feature importance of trained_random_forest
+    Return python_call("epl_learn", "feature_importance", model)
+End
+
+Note: ===========================================================
+Note:  Model Persistence
+Note: ===========================================================
+
+Define Function save_model Takes model, filepath
+    Note: Save a trained model to file
+    Note: Example: Save model my_classifier to "model.pkl"
+    Return python_call("epl_learn", "save_model", model, filepath)
+End
+
+Define Function load_model Takes filepath
+    Note: Load a trained model from file
+    Note: Example: Load model from "model.pkl"
+    Return python_call("epl_learn", "load_model", filepath)
+End
+
+Note: ===========================================================
+Note:  Built-in Datasets
+Note: ===========================================================
+
+Define Function load_iris_dataset Takes
+    Note: Load the Iris flower dataset
+    Note: Example: Load iris dataset
+    Return python_call("epl_learn", "load_iris")
+End
+
+Define Function load_digits_dataset Takes
+    Note: Load the digits dataset
+    Note: Example: Load digits dataset
+    Return python_call("epl_learn", "load_digits")
+End
+
+Define Function load_boston_dataset Takes
+    Note: Load the Boston housing dataset
+    Note: Example: Load boston dataset
+    Return python_call("epl_learn", "load_boston")
+End
+
+Define Function load_wine_dataset Takes
+    Note: Load the Wine dataset
+    Note: Example: Load wine dataset
+    Return python_call("epl_learn", "load_wine")
+End
+
+Define Function make_classification_data Takes n_samples, n_features, n_classes
+    Note: Generate synthetic classification data
+    Note: Example: Make classification data with 1000 samples 20 features 2 classes
+    Return python_call("epl_learn", "make_classification", n_samples, n_features, n_classes)
+End
+
+Define Function make_regression_data Takes n_samples, n_features
+    Note: Generate synthetic regression data
+    Note: Example: Make regression data with 1000 samples 10 features
+    Return python_call("epl_learn", "make_regression", n_samples, n_features)
+End
+
+Define Function make_blobs_data Takes n_samples, n_centers
+    Note: Generate clustered data blobs
+    Note: Example: Make blobs data with 1000 samples 3 centers
+    Return python_call("epl_learn", "make_blobs", n_samples, n_centers)
+End

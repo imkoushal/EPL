@@ -1,4 +1,42 @@
-Note: Todo App Backend
+Note: ═══════════════════════════════════
+Note: EPL TODO App with SQLite Database
+Note: Demonstrates combining database connectivity with the EPL Web Framework
+Note: ═══════════════════════════════════
 
-Create WebApp called app
-Print "Server started"
+Display "Initializing SQLite Database..."
+db = db_open("todo_records.db")
+db_execute(db, "CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY, task TEXT, done INTEGER)")
+
+Note: Insert some sample data if table is empty
+existing = db_query(db, "SELECT count(*) as count FROM todos")
+If existing.count == 0 Then
+    db_execute(db, "INSERT INTO todos (task, done) VALUES ('Learn EPL syntax', 1)")
+    db_execute(db, "INSERT INTO todos (task, done) VALUES ('Build an EPL showcase app', 0)")
+End
+
+Create WebApp called todoApp
+
+Route "/" shows
+    Page "EPL Todo Tracker"
+        Heading "EPL Todo Tracker ✅"
+        SubHeading "A simple CRM/Task tracker powered by EPL and SQLite"
+        
+        Text "This app is running locally. You can access the raw JSON data below:"
+        Link "View Raw Todos (JSON)" to "/api/todos"
+        
+        Button "Add New Task"
+    End
+End
+
+Route "/api/todos" responds with
+    Note: Query the database and return it directly as JSON
+    all_tasks = db_query(db, "SELECT * FROM todos")
+    Send json all_tasks
+End
+
+Route "/api/status" responds with
+    Send json Map with status = "Database Connected" and driver = "SQLite"
+End
+
+Display "Starting TODO API on port 3001..."
+Start todoApp on port 3001

@@ -88,15 +88,20 @@ class EPLRWLock:
                 self._read_ready.notify_all()
 
     def acquire_write(self):
+        with self._read_ready:
+            self._writers_waiting += 1
+            while self._readers > 0:
+                self._read_ready.wait()
+            self._writers_waiting -= 1
+            # Re-acquire the underlying lock for exclusive write access.
+            # The Condition's __exit__ will NOT release it because we
+            # explicitly acquire it again below after the Condition block.
         self._lock.acquire()
-        self._writers_waiting += 1
-        while self._readers > 0:
-            self._read_ready.wait()
-        self._writers_waiting -= 1
 
     def release_write(self):
-        self._read_ready.notify_all()
         self._lock.release()
+        with self._read_ready:
+            self._read_ready.notify_all()
 
     def __repr__(self):
         return f"<RWLock readers={self._readers} writers_waiting={self._writers_waiting}>"

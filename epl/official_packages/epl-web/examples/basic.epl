@@ -1,4 +1,4 @@
-Import "epl-web"
+Use "epl-web"
 
 Create app equal to create_app("official-web-demo")
 

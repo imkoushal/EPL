@@ -1,0 +1,56 @@
+Note: EPL DataFrame Package - Basic Example
+Note: Demonstrates DataFrame creation, filtering, and statistics
+
+Use "epl-dataframe"
+
+Say "======================================="
+Say "EPL DataFrame Package Demo"
+Say "======================================="
+
+Note: Create a simple DataFrame from lists
+Say ""
+Say "--- Creating DataFrame ---"
+
+Note: Create lists for each column
+Set products to ["Apple", "Banana", "Apple", "Orange", "Banana", "Apple"]
+Set regions to ["North", "South", "South", "North", "North", "South"]
+Set quantities to [100, 150, 200, 80, 120, 180]
+Set prices to [1.5, 0.75, 1.5, 2.0, 0.75, 1.5]
+
+Note: Create DataFrame using lists
+Set df to create_from_lists(["product", "region", "quantity", "price"], [products, regions, quantities, prices])
+Say "Created sales DataFrame"
+Say print_dataframe(df)
+
+Note: DataFrame properties
+Say ""
+Say "--- DataFrame Properties ---"
+Say "Columns: " + columns_of(df)
+Say "Rows: " + rows_of(df)
+
+Note: Filtering
+Say ""
+Say "--- Filtering ---"
+Set high_quantity to filter_where(df, "quantity", ">=", 150)
+Say "Products with quantity >= 150:"
+Say print_dataframe(high_quantity)
+
+Note: Sorting
+Say ""
+Say "--- Sorting ---"
+Set sorted_df to sort_by(df, "quantity", False)
+Say "Sorted by quantity (descending):"
+Say print_dataframe(sorted_df)
+
+Note: Statistics
+Say ""
+Say "--- Column Statistics ---"
+Say "Total quantity: " + sum_of_column(df, "quantity")
+Say "Average quantity: " + mean_of_column(df, "quantity")
+Say "Max price: " + max_of_column(df, "price")
+Say "Min quantity: " + min_of_column(df, "quantity")
+
+Say ""
+Say "======================================="
+Say "Demo complete!"
+Say "======================================="

@@ -1,0 +1,388 @@
+Note: EPL Array Package - NumPy-like array operations in plain English
+Note: Import "epl-array" to use these functions.
+
+Note: ===========================================================
+Note:  Array Creation Functions
+Note: ===========================================================
+
+Define Function create_array Takes data
+    Note: Create an array from a list of values
+    Note: Example: Create array from [1, 2, 3, 4, 5]
+    Return python_call("epl_array", "create_array", data)
+End
+
+Define Function array_of_zeros Takes shape
+    Note: Create an array filled with zeros
+    Note: Example: Array of zeros with shape [3, 3]
+    Return python_call("epl_array", "zeros", shape)
+End
+
+Define Function array_of_ones Takes shape
+    Note: Create an array filled with ones
+    Note: Example: Array of ones with shape [2, 4]
+    Return python_call("epl_array", "ones", shape)
+End
+
+Define Function array_range Takes start, stop, step
+    Note: Create an array with evenly spaced values
+    Note: Example: Array range from 0 to 10 step 2
+    Return python_call("epl_array", "arange", start, stop, step)
+End
+
+Define Function array_linspace Takes start, stop, count
+    Note: Create an array with count evenly spaced values between start and stop
+    Note: Example: Array linspace from 0 to 1 with 50 points
+    Return python_call("epl_array", "linspace", start, stop, count)
+End
+
+Define Function random_array Takes shape
+    Note: Create an array with random values between 0 and 1
+    Note: Example: Random array with shape [5, 5]
+    Return python_call("epl_array", "random", shape)
+End
+
+Define Function random_integers Takes low, high, shape
+    Note: Create an array with random integers
+    Note: Example: Random integers from 1 to 100 with shape [10]
+    Return python_call("epl_array", "randint", low, high, shape)
+End
+
+Define Function identity_matrix Takes size
+    Note: Create an identity matrix of given size
+    Note: Example: Identity matrix of size 4
+    Return python_call("epl_array", "eye", size)
+End
+
+Note: ===========================================================
+Note:  Array Properties
+Note: ===========================================================
+
+Define Function shape_of Takes array
+    Note: Get the shape (dimensions) of an array
+    Note: Example: Shape of my_array
+    Return python_call("epl_array", "shape", array)
+End
+
+Define Function size_of Takes array
+    Note: Get the total number of elements in an array
+    Note: Example: Size of my_array
+    Return python_call("epl_array", "size", array)
+End
+
+Define Function dimensions_of Takes array
+    Note: Get the number of dimensions of an array
+    Note: Example: Dimensions of my_array
+    Return python_call("epl_array", "ndim", array)
+End
+
+Define Function data_type_of Takes array
+    Note: Get the data type of array elements
+    Note: Example: Data type of my_array
+    Return python_call("epl_array", "dtype", array)
+End
+
+Note: ===========================================================
+Note:  Array Manipulation
+Note: ===========================================================
+
+Define Function reshape_array Takes array, new_shape
+    Note: Reshape an array to a new shape
+    Note: Example: Reshape my_array to [2, 6]
+    Return python_call("epl_array", "reshape", array, new_shape)
+End
+
+Define Function flatten_array Takes array
+    Note: Flatten a multi-dimensional array to 1D
+    Note: Example: Flatten my_matrix
+    Return python_call("epl_array", "flatten", array)
+End
+
+Define Function transpose_array Takes array
+    Note: Transpose an array (swap rows and columns)
+    Note: Example: Transpose my_matrix
+    Return python_call("epl_array", "transpose", array)
+End
+
+Define Function concatenate_arrays Takes arrs, axis
+    Note: Concatenate arrays along an axis
+    Note: Example: Concatenate [arr1, arr2] along axis 0
+    Return python_call("epl_array", "concatenate", arrays, axis)
+End
+
+Define Function stack_arrays Takes arrs, axis
+    Note: Stack arrays along a new axis
+    Note: Example: Stack [arr1, arr2] along axis 0
+    Return python_call("epl_array", "stack", arrays, axis)
+End
+
+Define Function split_array Takes array, sections, axis
+    Note: Split an array into multiple sub-arrays
+    Note: Example: Split my_array into 3 sections along axis 0
+    Return python_call("epl_array", "split", array, sections, axis)
+End
+
+Define Function slice_array Takes array, start_idx, end_idx
+    Note: Get a slice of an array
+    Note: Example: Slice my_array from 2 to 5
+    Return python_call("epl_array", "slice", array, start_idx, end_idx)
+End
+
+Note: ===========================================================
+Note:  Element-wise Math Operations
+Note: ===========================================================
+
+Define Function add_arrays Takes array1, array2
+    Note: Add two arrays element-wise
+    Note: Example: Add arr1 and arr2
+    Return python_call("epl_array", "add", array1, array2)
+End
+
+Define Function subtract_arrays Takes array1, array2
+    Note: Subtract two arrays element-wise
+    Note: Example: Subtract arr2 from arr1
+    Return python_call("epl_array", "subtract", array1, array2)
+End
+
+Define Function multiply_arrays Takes array1, array2
+    Note: Multiply two arrays element-wise
+    Note: Example: Multiply arr1 and arr2
+    Return python_call("epl_array", "multiply", array1, array2)
+End
+
+Define Function divide_arrays Takes array1, array2
+    Note: Divide two arrays element-wise
+    Note: Example: Divide arr1 by arr2
+    Return python_call("epl_array", "divide", array1, array2)
+End
+
+Define Function power_array Takes array, exponent
+    Note: Raise array elements to a power
+    Note: Example: Power of my_array to 2
+    Return python_call("epl_array", "power", array, exponent)
+End
+
+Define Function sqrt_array Takes array
+    Note: Square root of array elements
+    Note: Example: Square root of my_array
+    Return python_call("epl_array", "sqrt", array)
+End
+
+Define Function exp_array Takes array
+    Note: Exponential of array elements (e^x)
+    Note: Example: Exponential of my_array
+    Return python_call("epl_array", "exp", array)
+End
+
+Define Function log_array Takes array
+    Note: Natural logarithm of array elements
+    Note: Example: Log of my_array
+    Return python_call("epl_array", "log", array)
+End
+
+Define Function abs_array Takes array
+    Note: Absolute value of array elements
+    Note: Example: Absolute value of my_array
+    Return python_call("epl_array", "abs", array)
+End
+
+Define Function sin_array Takes array
+    Note: Sine of array elements (in radians)
+    Note: Example: Sine of angles
+    Return python_call("epl_array", "sin", array)
+End
+
+Define Function cos_array Takes array
+    Note: Cosine of array elements (in radians)
+    Note: Example: Cosine of angles
+    Return python_call("epl_array", "cos", array)
+End
+
+Define Function tan_array Takes array
+    Note: Tangent of array elements (in radians)
+    Note: Example: Tangent of angles
+    Return python_call("epl_array", "tan", array)
+End
+
+Note: ===========================================================
+Note:  Array Statistics
+Note: ===========================================================
+
+Define Function sum_of_array Takes array
+    Note: Sum of all elements in an array
+    Note: Example: Sum of my_array
+    Return python_call("epl_array", "sum", array)
+End
+
+Define Function mean_of_array Takes array
+    Note: Mean (average) of array elements
+    Note: Example: Mean of my_array
+    Return python_call("epl_array", "mean", array)
+End
+
+Define Function median_of_array Takes array
+    Note: Median of array elements
+    Note: Example: Median of my_array
+    Return python_call("epl_array", "median", array)
+End
+
+Define Function std_of_array Takes array
+    Note: Standard deviation of array elements
+    Note: Example: Standard deviation of my_array
+    Return python_call("epl_array", "std", array)
+End
+
+Define Function variance_of_array Takes array
+    Note: Variance of array elements
+    Note: Example: Variance of my_array
+    Return python_call("epl_array", "var", array)
+End
+
+Define Function min_of_array Takes array
+    Note: Minimum value in an array
+    Note: Example: Minimum of my_array
+    Return python_call("epl_array", "min", array)
+End
+
+Define Function max_of_array Takes array
+    Note: Maximum value in an array
+    Note: Example: Maximum of my_array
+    Return python_call("epl_array", "max", array)
+End
+
+Define Function argmin_of_array Takes array
+    Note: Index of minimum value in an array
+    Note: Example: Index of minimum in my_array
+    Return python_call("epl_array", "argmin", array)
+End
+
+Define Function argmax_of_array Takes array
+    Note: Index of maximum value in an array
+    Note: Example: Index of maximum in my_array
+    Return python_call("epl_array", "argmax", array)
+End
+
+Define Function percentile_of_array Takes array, percent
+    Note: Calculate a percentile of array elements
+    Note: Example: 95th percentile of my_array
+    Return python_call("epl_array", "percentile", array, percent)
+End
+
+Note: ===========================================================
+Note:  Linear Algebra
+Note: ===========================================================
+
+Define Function dot_product Takes array1, array2
+    Note: Compute dot product of two arrays
+    Note: Example: Dot product of vec1 and vec2
+    Return python_call("epl_array", "dot", array1, array2)
+End
+
+Define Function matrix_multiply Takes matrix1, matrix2
+    Note: Multiply two matrices
+    Note: Example: Matrix multiply mat1 and mat2
+    Return python_call("epl_array", "matmul", matrix1, matrix2)
+End
+
+Define Function inverse_of Takes matrix
+    Note: Compute inverse of a square matrix
+    Note: Example: Inverse of my_matrix
+    Return python_call("epl_array", "inv", matrix)
+End
+
+Define Function determinant_of Takes matrix
+    Note: Compute determinant of a square matrix
+    Note: Example: Determinant of my_matrix
+    Return python_call("epl_array", "det", matrix)
+End
+
+Define Function eigenvalues_of Takes matrix
+    Note: Compute eigenvalues of a square matrix
+    Note: Example: Eigenvalues of my_matrix
+    Return python_call("epl_array", "eigvals", matrix)
+End
+
+Define Function eigenvectors_of Takes matrix
+    Note: Compute eigenvalues and eigenvectors of a square matrix
+    Note: Example: Eigenvectors of my_matrix
+    Return python_call("epl_array", "eig", matrix)
+End
+
+Define Function solve_linear_system Takes matrix, vector
+    Note: Solve linear system Ax = b for x
+    Note: Example: Solve A times x equals b
+    Return python_call("epl_array", "solve", matrix, vector)
+End
+
+Define Function norm_of Takes array
+    Note: Compute the Euclidean norm of an array
+    Note: Example: Norm of my_vector
+    Return python_call("epl_array", "norm", array)
+End
+
+Define Function trace_of Takes matrix
+    Note: Compute trace (sum of diagonal) of a matrix
+    Note: Example: Trace of my_matrix
+    Return python_call("epl_array", "trace", matrix)
+End
+
+Define Function rank_of Takes matrix
+    Note: Compute rank of a matrix
+    Note: Example: Rank of my_matrix
+    Return python_call("epl_array", "rank", matrix)
+End
+
+Note: ===========================================================
+Note:  Array Comparison & Logic
+Note: ===========================================================
+
+Define Function arrays_equal Takes array1, array2
+    Note: Check if two arrays are element-wise equal
+    Note: Example: Check if arr1 equals arr2
+    Return python_call("epl_array", "array_equal", array1, array2)
+End
+
+Define Function where_in_array Takes condition, x, y
+    Note: Return elements from x or y depending on condition
+    Note: Example: Where condition then x else y
+    Return python_call("epl_array", "where", condition, x, y)
+End
+
+Define Function all_true Takes array
+    Note: Check if all elements are True
+    Note: Example: All true in my_array
+    Return python_call("epl_array", "all", array)
+End
+
+Define Function any_true Takes array
+    Note: Check if any element is True
+    Note: Example: Any true in my_array
+    Return python_call("epl_array", "any", array)
+End
+
+Note: ===========================================================
+Note:  Sorting & Searching
+Note: ===========================================================
+
+Define Function sort_array Takes array
+    Note: Sort an array in ascending order
+    Note: Example: Sort my_array
+    Return python_call("epl_array", "sort", array)
+End
+
+Define Function argsort_array Takes array
+    Note: Get indices that would sort an array
+    Note: Example: Indices to sort my_array
+    Return python_call("epl_array", "argsort", array)
+End
+
+Define Function unique_in_array Takes array
+    Note: Find unique elements in an array
+    Note: Example: Unique values in my_array
+    Return python_call("epl_array", "unique", array)
+End
+
+Define Function search_sorted Takes array, value
+    Note: Find index to insert value maintaining sorted order
+    Note: Example: Search sorted array for 5
+    Return python_call("epl_array", "searchsorted", array, value)
+End

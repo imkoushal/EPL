@@ -38,6 +38,7 @@ Usage from Python:
 
 import sys
 import os
+import re
 import time
 import traceback
 import xml.etree.ElementTree as ET
@@ -506,7 +507,6 @@ class EPLTestRunner:
         while i < len(lines):
             line = lines[i].strip()
             # Match: Test "name" or Test 'name'
-            import re
             m = re.match(r'Test\s+["\'](.+?)["\']', line)
             if m:
                 test_name = m.group(1)

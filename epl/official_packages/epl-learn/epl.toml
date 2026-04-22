@@ -1,0 +1,18 @@
+[project]
+name = "epl-learn"
+version = "1.0.0"
+description = "Scikit-learn like machine learning for EPL - classification, regression, clustering"
+author = "EPL Community"
+license = "MIT"
+entry = "src/main.epl"
+keywords = ["sklearn", "machine-learning", "classification", "regression", "clustering", "ml"]
+
+[dependencies]
+epl-array = ">=1.0.0"
+
+[python]
+requires = ["scikit-learn>=1.0.0", "numpy>=1.20.0"]
+
+[scripts]
+example = "epl run examples/basic.epl"
+test = "epl test examples/"

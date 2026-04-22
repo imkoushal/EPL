@@ -5,13 +5,13 @@ Supported EPL testing facade package.
 ## Install
 
 ```bash
-epl install epl-test
+epl use epl-test
 ```
 
 ## Use
 
 ```epl
-Import "epl-test"
+Use "epl-test"
 
 Define Function math_test
     Call expect_equal(1 + 1, 2, "basic arithmetic")

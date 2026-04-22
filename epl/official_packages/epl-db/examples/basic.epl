@@ -1,4 +1,4 @@
-Import "epl-db"
+Use "epl-db"
 
 Create conn equal to open("official-demo.db")
 Call create_table(conn, "items", Map with name = "TEXT")

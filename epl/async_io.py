@@ -86,7 +86,11 @@ class EPLEventLoop:
             except Exception:
                 pass  # Best-effort drain
             self._loop.call_soon_threadsafe(self._loop.stop)
-        self._executor.shutdown(wait=True, cancel_futures=True)
+        import sys
+        if sys.version_info >= (3, 9):
+            self._executor.shutdown(wait=True, cancel_futures=True)
+        else:
+            self._executor.shutdown(wait=True)
         if self._thread and self._thread.is_alive():
             self._thread.join(timeout=2)
 
@@ -241,14 +245,26 @@ from epl.concurrency import EPLTimer
 
 
 class EPLInterval:
-    """Repeating timer that fires a callback at intervals (async-native)."""
+    """Repeating timer that fires a callback at intervals (async-native).
+    
+    Call start() to begin the interval. This avoids scheduling work
+    before the caller has finished configuring the object.
+    """
 
     def __init__(self, interval_seconds, callback):
         self._interval = interval_seconds
         self._callback = callback
-        self._running = True
+        self._running = False
         self._loop = EPLEventLoop()
+        self._task = None
+
+    def start(self):
+        """Begin the repeating interval."""
+        if self._running:
+            return
+        self._running = True
         self._task = self._loop.run_coroutine(self._run())
+        return self
 
     async def _run(self):
         while self._running:
@@ -271,5 +287,5 @@ def register_async_builtins():
         'create_channel': lambda cap=0: EPLChannel(cap),
         'create_task_group': lambda: EPLTaskGroup(),
         'create_timer': lambda delay, cb: EPLTimer(delay, cb),
-        'create_interval': lambda interval, cb: EPLInterval(interval, cb),
+        'create_interval': lambda interval, cb: EPLInterval(interval, cb).start(),
     }

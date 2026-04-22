@@ -1,0 +1,17 @@
+[project]
+name = "epl-array"
+version = "1.0.0"
+description = "NumPy-like array operations for EPL - create, manipulate, and compute with arrays"
+author = "EPL Community"
+license = "MIT"
+entry = "src/main.epl"
+keywords = ["array", "math", "numpy", "linear-algebra", "statistics"]
+
+[dependencies]
+
+[python]
+requires = ["numpy>=1.20.0"]
+
+[scripts]
+example = "epl run examples/basic.epl"
+test = "epl test examples/"

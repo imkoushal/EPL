@@ -55,9 +55,16 @@ class ExitSignal(Exception):
 # ─── Async Runtime ────────────────────────────────────────
 
 import asyncio as _asyncio
-import threading as _threading
 
-_thread_pool = _futures.ThreadPoolExecutor(max_workers=16)
+# Lazy thread pool — created on first use to avoid wasting threads on import
+_thread_pool = None
+
+def _get_thread_pool():
+    """Get or create the shared thread pool (lazy initialization)."""
+    global _thread_pool
+    if _thread_pool is None:
+        _thread_pool = _futures.ThreadPoolExecutor(max_workers=16)
+    return _thread_pool
 
 # Dedicated event loop running in a background thread for true async I/O
 _async_loop = None
@@ -536,7 +543,9 @@ class Interpreter:
 
     def close(self):
         """Clean up resources (thread pool, event loop, caches)."""
-        _thread_pool.shutdown(wait=False)
+        pool = _get_thread_pool()
+        if pool is not None:
+            pool.shutdown(wait=False)
         global _async_loop
         if _async_loop is not None and _async_loop.is_running():
             _async_loop.call_soon_threadsafe(_async_loop.stop)
@@ -1320,7 +1329,7 @@ class Interpreter:
         def _task():
             child_env = env.create_child()
             return self._eval(expr, child_env)
-        future = _thread_pool.submit(_task)
+        future = _get_thread_pool().submit(_task)
         epl_future = EPLFuture(future, name=node.var_name)
         env.define_variable(node.var_name, epl_future)
 
@@ -3049,7 +3058,7 @@ class Interpreter:
                 return ret.value
             return None
 
-        future = _thread_pool.submit(run_async)
+        future = _get_thread_pool().submit(run_async)
         return EPLFuture(future, name)
 
     def _exec_super_call(self, node: ast.SuperCall, env: Environment):

@@ -50,6 +50,7 @@ ERROR_CODES = {
     'ImportError':      'E1300',
     'AttributeError':   'E1400',
     'AssertionError': 'E1500',
+    'AssertionError': 'E1500',
     'ConcurrencyError': 'E1600',
     'EPLError':         'E0000',
 }
@@ -237,6 +238,7 @@ class EPLError(Exception):
             'OverflowError': 'EPL Overflow Error',
             'ImportError': 'EPL Import Error',
             'AttributeError': 'EPL Attribute Error',
+            'AssertionError': 'EPL Assertion Error',
             'AssertionError': 'EPL Assertion Error',
             'ConcurrencyError': 'EPL Concurrency Error',
         }
@@ -446,8 +448,10 @@ class AssertionError(EPLError):
         return self._format_standard_message('EPL Assertion Error', include_traceback=True, include_hint=False)
 
 
-# Backward-compatibility alias (legacy code used 'AssertationError' spelling)
+# Canonical correct spelling (alias for backward compatibility)
 AssertionError = AssertionError
+# Legacy alternate misspelling alias
+AssertationError = AssertionError
 
 
 class ConcurrencyError(EPLError):
@@ -497,8 +501,9 @@ ERROR_CLASSES = {
     'OverflowError': OverflowError,
     'ImportError': ImportError,
     'AttributeError': AttributeError,
-    'AssertionError': AssertionError,   # backward compat alias
-    'AssertionError': AssertionError,    # canonical spelling
+    'AssertionError': AssertionError,   # backward compat (misspelled)
+    'AssertionError': AssertionError,    # canonical correct spelling
+    'AssertationError': AssertionError,  # legacy alternate alias
     'ConcurrencyError': ConcurrencyError,
     'NotImplementedError': NotImplementedError,
 }

@@ -1,0 +1,322 @@
+Note: EPL Science Package - SciPy-like scientific computing in plain English
+Note: Import "epl-science" to use these functions.
+
+Note: ===========================================================
+Note:  Optimization Functions
+Note: ===========================================================
+
+Define Function minimize_function Takes func, x0, method
+    Note: Find the minimum of a function
+    Note: Example: Minimize function my_func starting at [1, 1] method "BFGS"
+    Return python_call("epl_science", "minimize", func, x0, method)
+End
+
+Define Function maximize_function Takes func, x0, method
+    Note: Find the maximum of a function (minimizes -f)
+    Note: Example: Maximize function my_func starting at [1, 1] method "BFGS"
+    Return python_call("epl_science", "maximize", func, x0, method)
+End
+
+Define Function find_root Takes func, x0
+    Note: Find a root (zero) of a function
+    Note: Example: Find root of my_func starting at 1.0
+    Return python_call("epl_science", "find_root", func, x0)
+End
+
+Define Function find_roots Takes func, bracket
+    Note: Find roots within a bracket [a, b]
+    Note: Example: Find roots of my_func in bracket [0, 2]
+    Return python_call("epl_science", "find_roots", func, bracket)
+End
+
+Define Function solve_equation Takes func, x0
+    Note: Solve a system of equations f(x) = 0
+    Note: Example: Solve equation my_system starting at [1, 1]
+    Return python_call("epl_science", "solve_equation", func, x0)
+End
+
+Define Function linear_least_squares Takes A, b
+    Note: Solve least squares problem: minimize ||Ax - b||²
+    Note: Example: Linear least squares A and b
+    Return python_call("epl_science", "lstsq", A, b)
+End
+
+Define Function curve_fit Takes func, xdata, ydata
+    Note: Fit a function to data points
+    Note: Example: Curve fit my_model to xdata and ydata
+    Return python_call("epl_science", "curve_fit", func, xdata, ydata)
+End
+
+Note: ===========================================================
+Note:  Integration Functions
+Note: ===========================================================
+
+Define Function integrate Takes func, a, b
+    Note: Compute definite integral of a function from a to b
+    Note: Example: Integrate my_func from 0 to 1
+    Return python_call("epl_science", "integrate", func, a, b)
+End
+
+Define Function integrate_trapezoid Takes y, x
+    Note: Integrate using trapezoidal rule with data points
+    Note: Example: Integrate trapezoid y_values with x_values
+    Return python_call("epl_science", "trapezoid", y, x)
+End
+
+Define Function integrate_simpson Takes y, x
+    Note: Integrate using Simpson's rule with data points
+    Note: Example: Integrate simpson y_values with x_values
+    Return python_call("epl_science", "simpson", y, x)
+End
+
+Define Function double_integrate Takes func, x_range, y_range
+    Note: Compute double integral over a region
+    Note: Example: Double integrate my_func over x_range [0, 1] y_range [0, 2]
+    Return python_call("epl_science", "dblquad", func, x_range, y_range)
+End
+
+Define Function solve_ode Takes func, y0, t_span
+    Note: Solve an ordinary differential equation
+    Note: Example: Solve ODE my_derivative with y0 [1.0] over t_span [0, 10]
+    Return python_call("epl_science", "solve_ivp", func, y0, t_span)
+End
+
+Note: ===========================================================
+Note:  Interpolation Functions
+Note: ===========================================================
+
+Define Function interpolate_linear Takes x_points, y_points
+    Note: Create linear interpolation function from data points
+    Note: Example: Interpolate linear x_data and y_data
+    Return python_call("epl_science", "interp_linear", x_points, y_points)
+End
+
+Define Function interpolate_cubic Takes x_points, y_points
+    Note: Create cubic spline interpolation from data points
+    Note: Example: Interpolate cubic x_data and y_data
+    Return python_call("epl_science", "interp_cubic", x_points, y_points)
+End
+
+Define Function interpolate_at Takes interp_func, x
+    Note: Evaluate interpolation function at point(s)
+    Note: Example: Interpolate at my_interp with x value 2.5
+    Return python_call("epl_science", "interp_eval", interp_func, x)
+End
+
+Define Function spline_fit Takes x_points, y_points, smoothing
+    Note: Fit a smoothing spline to data
+    Note: Example: Spline fit x_data and y_data with smoothing 0.5
+    Return python_call("epl_science", "spline_fit", x_points, y_points, smoothing)
+End
+
+Note: ===========================================================
+Note:  Signal Processing
+Note: ===========================================================
+
+Define Function fourier_transform Takes signal
+    Note: Compute the Fast Fourier Transform (FFT) of a signal
+    Note: Example: Fourier transform of my_signal
+    Return python_call("epl_science", "fft", signal)
+End
+
+Define Function inverse_fourier Takes spectrum
+    Note: Compute the inverse FFT
+    Note: Example: Inverse fourier of my_spectrum
+    Return python_call("epl_science", "ifft", spectrum)
+End
+
+Define Function frequency_spectrum Takes signal, sample_rate
+    Note: Get frequency spectrum with frequencies
+    Note: Example: Frequency spectrum of my_signal with sample_rate 1000
+    Return python_call("epl_science", "freq_spectrum", signal, sample_rate)
+End
+
+Define Function convolve_signals Takes signal1, signal2
+    Note: Convolve two signals
+    Note: Example: Convolve signal_a and signal_b
+    Return python_call("epl_science", "convolve", signal1, signal2)
+End
+
+Define Function correlate_signals Takes signal1, signal2
+    Note: Cross-correlate two signals
+    Note: Example: Correlate signal_a and signal_b
+    Return python_call("epl_science", "correlate", signal1, signal2)
+End
+
+Define Function filter_signal Takes signal, filter_type, cutoff, sample_rate
+    Note: Apply a filter to a signal
+    Note: Example: Filter signal my_signal with filter_type "lowpass" cutoff 100 sample_rate 1000
+    Return python_call("epl_science", "filter_signal", signal, filter_type, cutoff, sample_rate)
+End
+
+Define Function find_peaks Takes signal, height, distance
+    Note: Find peaks in a signal
+    Note: Example: Find peaks in my_signal with height 0.5 distance 10
+    Return python_call("epl_science", "find_peaks", signal, height, distance)
+End
+
+Define Function smooth_signal Takes signal, window_size
+    Note: Smooth a signal using moving average
+    Note: Example: Smooth my_signal with window_size 5
+    Return python_call("epl_science", "smooth", signal, window_size)
+End
+
+Note: ===========================================================
+Note:  Statistical Tests
+Note: ===========================================================
+
+Define Function t_test Takes sample1, sample2
+    Note: Perform two-sample t-test
+    Note: Example: T-test between group_a and group_b
+    Return python_call("epl_science", "ttest", sample1, sample2)
+End
+
+Define Function t_test_one_sample Takes sample, population_mean
+    Note: Perform one-sample t-test
+    Note: Example: T-test one sample data against mean 50
+    Return python_call("epl_science", "ttest_1samp", sample, population_mean)
+End
+
+Define Function paired_t_test Takes sample1, sample2
+    Note: Perform paired t-test
+    Note: Example: Paired t-test between before and after
+    Return python_call("epl_science", "ttest_paired", sample1, sample2)
+End
+
+Define Function chi_square_test Takes observed, expected
+    Note: Perform chi-square test
+    Note: Example: Chi-square test observed vs expected
+    Return python_call("epl_science", "chisquare", observed, expected)
+End
+
+Define Function anova_test Takes groups
+    Note: Perform one-way ANOVA test
+    Note: Example: ANOVA test on [group1, group2, group3]
+    Return python_call("epl_science", "anova", groups)
+End
+
+Define Function correlation_test Takes x, y
+    Note: Test correlation between two variables (Pearson)
+    Note: Example: Correlation test between x and y
+    Return python_call("epl_science", "pearsonr", x, y)
+End
+
+Define Function spearman_correlation Takes x, y
+    Note: Compute Spearman rank correlation
+    Note: Example: Spearman correlation between x and y
+    Return python_call("epl_science", "spearmanr", x, y)
+End
+
+Define Function normality_test Takes data
+    Note: Test if data follows normal distribution (Shapiro-Wilk)
+    Note: Example: Normality test on my_data
+    Return python_call("epl_science", "shapiro", data)
+End
+
+Define Function ks_test Takes data, distribution
+    Note: Kolmogorov-Smirnov test against a distribution
+    Note: Example: KS test my_data against distribution "norm"
+    Return python_call("epl_science", "kstest", data, distribution)
+End
+
+Note: ===========================================================
+Note:  Probability Distributions
+Note: ===========================================================
+
+Define Function normal_pdf Takes x, mean, std
+    Note: Normal (Gaussian) probability density
+    Note: Example: Normal PDF at x with mean 0 std 1
+    Return python_call("epl_science", "norm_pdf", x, mean, std)
+End
+
+Define Function normal_cdf Takes x, mean, std
+    Note: Normal cumulative distribution
+    Note: Example: Normal CDF at x with mean 0 std 1
+    Return python_call("epl_science", "norm_cdf", x, mean, std)
+End
+
+Define Function normal_random Takes mean, std, size
+    Note: Generate random samples from normal distribution
+    Note: Example: Normal random mean 0 std 1 size 100
+    Return python_call("epl_science", "norm_rvs", mean, std, size)
+End
+
+Define Function uniform_random Takes low, high, size
+    Note: Generate random samples from uniform distribution
+    Note: Example: Uniform random low 0 high 1 size 100
+    Return python_call("epl_science", "uniform_rvs", low, high, size)
+End
+
+Define Function exponential_random Takes scale, size
+    Note: Generate random samples from exponential distribution
+    Note: Example: Exponential random scale 1.0 size 100
+    Return python_call("epl_science", "expon_rvs", scale, size)
+End
+
+Define Function poisson_random Takes mu, size
+    Note: Generate random samples from Poisson distribution
+    Note: Example: Poisson random mu 5 size 100
+    Return python_call("epl_science", "poisson_rvs", mu, size)
+End
+
+Define Function binomial_random Takes n, p, size
+    Note: Generate random samples from binomial distribution
+    Note: Example: Binomial random n 10 p 0.5 size 100
+    Return python_call("epl_science", "binom_rvs", n, p, size)
+End
+
+Note: ===========================================================
+Note:  Distance & Similarity
+Note: ===========================================================
+
+Define Function euclidean_distance Takes a, b
+    Note: Compute Euclidean distance between two points
+    Note: Example: Euclidean distance between point_a and point_b
+    Return python_call("epl_science", "euclidean", a, b)
+End
+
+Define Function cosine_similarity Takes a, b
+    Note: Compute cosine similarity between two vectors
+    Note: Example: Cosine similarity between vec_a and vec_b
+    Return python_call("epl_science", "cosine", a, b)
+End
+
+Define Function manhattan_distance Takes a, b
+    Note: Compute Manhattan (city block) distance
+    Note: Example: Manhattan distance between point_a and point_b
+    Return python_call("epl_science", "manhattan", a, b)
+End
+
+Define Function distance_matrix Takes points
+    Note: Compute pairwise distance matrix
+    Note: Example: Distance matrix for all points
+    Return python_call("epl_science", "pdist_matrix", points)
+End
+
+Note: ===========================================================
+Note:  Special Functions
+Note: ===========================================================
+
+Define Function gamma_function Takes x
+    Note: Compute the gamma function Γ(x)
+    Note: Example: Gamma function of 5
+    Return python_call("epl_science", "gamma", x)
+End
+
+Define Function beta_function Takes a, b
+    Note: Compute the beta function B(a, b)
+    Note: Example: Beta function of 2 and 3
+    Return python_call("epl_science", "beta", a, b)
+End
+
+Define Function bessel_j Takes n, x
+    Note: Bessel function of the first kind
+    Note: Example: Bessel J of order 0 at x
+    Return python_call("epl_science", "jn", n, x)
+End
+
+Define Function error_function Takes x
+    Note: Compute the error function erf(x)
+    Note: Example: Error function of 1.0
+    Return python_call("epl_science", "erf", x)
+End

@@ -1,0 +1,68 @@
+Note: ═══════════════════════════════════════════════════════
+Note: EPL Neural Chatbot Backend
+Note: Implements WebApp routing and native http_post to interact with Groq APIs
+Note: ═══════════════════════════════════════════════════════
+
+Display "Initializing Neural Framework components..."
+
+Note: ─── API Configuration ─────────────────────────────────
+Note: Add your LIVE Groq API Key below to enable true AI reasoning!
+GROQ_API_KEY = "gsk_PLease_Replace_This_With_Your_Actual_Groq_Token"
+MODEL_NAME = "llama3-8b-8192"
+
+Note: ─── Core Logic ────────────────────────────────────────
+
+Function ask_groq takes query
+    If GROQ_API_KEY == "gsk_PLease_Replace_This_With_Your_Actual_Groq_Token" Then
+        Return "<b>SYSTEM ALERT:</b> Groq API Key not detected.<br><br>Please open <code>examples/apps/chatbot/chatbot_app.epl</code> and update the <b>GROQ_API_KEY</b> variable to proceed."
+    End
+
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = ["Authorization: Bearer " + GROQ_API_KEY, "Content-Type: application/json"]
+    
+    messages_array = [Map with role = "user" and content = query]
+    payload = Map with model = MODEL_NAME and messages = messages_array
+    
+    Try
+        response_data = http_post(url, json_stringify(payload), headers)
+        parsed = json_parse(response_data)
+        
+        choices = parsed.get("choices")
+        first_choice = choices[0]
+        msg_obj = first_choice.get("message")
+        ReplyText = msg_obj.get("content")
+        
+        Return ReplyText
+    Catch error
+        Return "<b>CRITICAL ERROR:</b> Unable to reach Groq intelligence cluster. " + error
+    End
+End
+
+Note: ─── API Routing ───────────────────────────────────────
+
+Create WebApp called jarvis
+
+Route "/" responds with
+    Note: Storing compressed HTML natively
+    ui_template = "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>EPL Neural Assistant</title><style>:root{--bg-dark:#0f172a;--glass-bg:rgba(30,41,59,0.7);--glass-border:rgba(255,255,255,0.08);--accent:#38bdf8;--text-main:#f8fafc;--bubble-user:#0284c7;--bubble-ai:#334155;}body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#020617 0%,#172554 100%);color:var(--text-main);margin:0;height:100vh;display:flex;justify-content:center;align-items:center;}.chat-container{width:95%;max-width:900px;height:85vh;background:var(--glass-bg);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5),0 0 40px rgba(56,189,248,0.1);}.header{padding:20px 24px;background:rgba(2,6,23,0.4);border-bottom:1px solid var(--glass-border);display:flex;align-items:center;gap:12px;}.dot{width:12px;height:12px;background:var(--accent);border-radius:50%;box-shadow:0 0 12px var(--accent);animation:pulse 2s infinite;}@keyframes pulse{0%{opacity:1;transform:scale(1);}50%{opacity:0.7;transform:scale(1.1);box-shadow:0 0 20px var(--accent);}100%{opacity:1;transform:scale(1);}}.header-title{margin:0;font-size:1.25rem;font-weight:600;}.chat-box{flex-grow:1;padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth;}.msg{max-width:80%;padding:16px 20px;border-radius:20px;line-height:1.6;font-size:0.95rem;animation:popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);word-wrap:break-word;}@keyframes popIn{0%{opacity:0;transform:translateY(15px) scale(0.95);}100%{opacity:1;transform:translateY(0) scale(1);}}.user-msg{background:var(--bubble-user);align-self:flex-end;border-bottom-right-radius:4px;box-shadow:0 4px 15px rgba(2,132,199,0.3);}.ai-msg{background:var(--bubble-ai);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--glass-border);box-shadow:0 4px 15px rgba(0,0,0,0.2);}.input-area{padding:20px 24px;background:rgba(2,6,23,0.6);border-top:1px solid var(--glass-border);display:flex;gap:16px;}input{flex-grow:1;background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);border-radius:14px;padding:16px 22px;color:white;font-size:1rem;outline:none;}input:focus{border-color:var(--accent);background:rgba(255,255,255,0.08);}button{background:var(--accent);color:#020617;border:none;border-radius:14px;padding:0 28px;font-size:1rem;font-weight:700;cursor:pointer;}.typing{font-style:italic;opacity:0.7;}.thinking-dots:after{content:'.';animation:dots 1.5s steps(5,end) infinite;}@keyframes dots{0%,20%{content:'.';}40%{content:'..';}60%,100%{content:'...';}}</style></head><body><div class='chat-container'><div class='header'><div class='dot'></div><h2 class='header-title'>EPL Neural Assistant</h2></div><div class='chat-box' id='chat'><div class='msg ai-msg'>Network established. I am an advanced Neural Assistant built strictly using the <b>English Programming Language (EPL)</b>.<br><br>How may I accelerate your objectives today?</div></div><div class='input-area'><input type='text' id='userInput' placeholder='Synthesize your query...' onkeypress='if(event.key === \"Enter\") sendMsg()'><button onclick='sendMsg()'>Transmit</button></div></div><script>const chat = document.getElementById('chat');const input = document.getElementById('userInput');async function sendMsg() {const text = input.value.trim();if(!text) return;chat.innerHTML += `<div class=\"msg user-msg\">${text.replace(/</g, \"&lt;\")}</div>`;input.value = '';const typingId = 'typing-' + Date.now();chat.innerHTML += `<div class=\"msg ai-msg typing\" id=\"${typingId}\">Computing matrix<span class=\"thinking-dots\"></span></div>`;chat.scrollTop = chat.scrollHeight;try {const response = await fetch(\"/api/chat\", {method: \"POST\",headers: {\"Content-Type\": \"application/json\"},body: JSON.stringify({ message: text })});if (!response.ok) throw new Error(\"HTTP \" + response.status);const data = await response.json();document.getElementById(typingId).remove();chat.innerHTML += `<div class=\"msg ai-msg\">${data.reply || \"Anomaly: Payload missing from server.\"}</div>`;} catch (err) {document.getElementById(typingId).remove();chat.innerHTML += `<div class=\"msg ai-msg\" style=\"color: #ef4444;\">Connection terminated. Server anomaly detected.</div>`;}chat.scrollTop = chat.scrollHeight;}</script></body></html>"
+    Return ui_template
+End
+
+Route "/api/chat" responds with
+    payload = request.data
+    incoming_message = payload.get("message")
+    
+    If incoming_message == "" Then
+        Send json Map with reply = "Empty payload rejected."
+    Otherwise
+        Display "Analyzing user request..."
+        brain_response = ask_groq(incoming_message)
+        Send json Map with reply = brain_response
+    End
+End
+
+Note: ─── Initialization ────────────────────────────────────
+
+Display "Neural AI Core Online."
+Display "Waiting for connections on http://localhost:8050"
+Start jarvis on port 8050

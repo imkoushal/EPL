@@ -1,0 +1,17 @@
+[project]
+name = "epl-dataframe"
+version = "1.0.0"
+description = "Pandas-like DataFrame operations for EPL - data manipulation, filtering, grouping"
+author = "EPL Community"
+license = "MIT"
+entry = "src/main.epl"
+keywords = ["dataframe", "pandas", "csv", "data", "analysis", "table"]
+
+[dependencies]
+
+[python]
+requires = ["pandas>=1.3.0"]
+
+[scripts]
+example = "epl run examples/basic.epl"
+test = "epl test examples/"

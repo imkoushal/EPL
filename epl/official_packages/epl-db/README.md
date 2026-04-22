@@ -5,13 +5,13 @@ Supported EPL database facade package.
 ## Install
 
 ```bash
-epl install epl-db
+epl use epl-db
 ```
 
 ## Use
 
 ```epl
-Import "epl-db"
+Use "epl-db"
 
 Create conn equal to open("app.db")
 Call create_table(conn, "notes", Map with title = "TEXT" and body = "TEXT")

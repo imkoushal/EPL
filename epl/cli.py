@@ -10,7 +10,7 @@ Usage:
     epl wasm <file.epl>          Compile to WebAssembly
     epl test [dir|file]          Run tests
     epl repl                     Interactive REPL
-    epl install [--frozen] [package] Install project deps or a package
+    epl use [--frozen] [package] Install project deps or a package
     epl gitinstall <owner/repo>  Install/save a GitHub package dependency
     epl gitremove <name>         Remove a GitHub dependency declaration
     epl gitdeps                  List GitHub package dependencies
@@ -76,7 +76,8 @@ HELP = f"""\
   epl wasm <file.epl>              Compile to WebAssembly (.wasm)
   epl test [dir|file]              Run EPL test suite
   epl repl                         Start interactive REPL
-  epl install [--frozen] [package] Install project deps or a package
+  epl use [--frozen] [package]     Install project deps or a package
+  epl install [--frozen] [package] Alias for 'epl use'
   epl uninstall <package>          Remove a package
   epl packages                     List installed packages
   epl search <query>               Search available and installed packages
@@ -176,8 +177,8 @@ HELP = f"""\
   epl wasm myapp/main.epl          Compile to .wasm
   epl test tests/                  Run all tests
   epl serve webapp.epl --reload    Dev server with hot-reload
-  epl install github:user/lib      Install package from GitHub
-  epl install user/lib             Same as GitHub install shorthand
+  epl use github:user/lib          Install package from GitHub
+  epl use user/lib                 Same as GitHub install shorthand
   epl gitinstall epl-lang/web-kit
   epl pyinstall yaml pyyaml>=6     Save/import a pip package with different name
   epl github clone epl-lang/epl
@@ -339,6 +340,7 @@ def cli_main(argv=None):
         'test':      lambda: _run_tests(rest, flags),
         'repl':      lambda: _run_repl(flags),
         'install':   lambda: _pkg_install(rest),
+        'use':       lambda: _pkg_install(rest),  # Alias: "epl use" = "epl install"
         'uninstall': lambda: _pkg_uninstall(rest),
         'packages':  lambda: _pkg_list(),
         'gitinstall': lambda: _git_install(rest),

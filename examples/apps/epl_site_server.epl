@@ -1,0 +1,46 @@
+Note: ═══════════════════════════════════
+Note: EPL Official Website Server
+Note: ═══════════════════════════════════
+
+Display "Initializing EPL Website..."
+
+Create WebApp called eplSite
+
+Route "/" shows
+    Page "EPL: English Programming Language"
+        Heading "EPL: The English Programming Language 🚀"
+        SubHeading "Write code in plain English. No syntax to memorize. Build anything."
+        Text "Welcome to the official EPL website, which is proudly built entirely using EPL!"
+        
+        SubHeading "Why EPL?"
+        List ["100% English syntax", "Compiles to LLVM native code", "Built-in web server framework", "Beginner-friendly yet production-ready"]
+        
+        Button "Download Current Version"
+        Link "Read the Documentation" to "/docs"
+        Link "Check System Status API" to "/api/status"
+    End
+End
+
+Route "/docs" shows
+    Page "EPL Documentation"
+        Heading "Getting Started with EPL"
+        Text "To install EPL globally on your system, simply run:"
+        Text "> pip install epl-lang"
+        
+        SubHeading "Hello World Example"
+        Text "Creating your first program is as easy as saying it:"
+        Text "Say \"Hello, World!\""
+        
+        SubHeading "Next Steps"
+        Text "Read the full tutorials in your local docs folder or try the EPL Playground."
+        
+        Link "Back to Homepage" to "/"
+    End
+End
+
+Route "/api/status" responds with
+    Send json Map with name = "epl_site" and status = "online" and version = "7.4.5"
+End
+
+Display "Starting EPL Official Site on port 8080..."
+Start eplSite on port 8080

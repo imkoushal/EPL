@@ -1,0 +1,374 @@
+Note: EPL Plot Package - Matplotlib-like plotting in plain English
+Note: Import "epl-plot" to use these functions.
+
+Note: ===========================================================
+Note:  Figure Management
+Note: ===========================================================
+
+Define Function create_figure Takes width, height
+    Note: Create a new figure with given size in inches
+    Note: Example: Create figure with width 10 height 6
+    Return python_call("epl_plot", "create_figure", width, height)
+End
+
+Define Function create_subplots Takes rows, cols
+    Note: Create a figure with a grid of subplots
+    Note: Example: Create subplots with 2 rows 3 cols
+    Return python_call("epl_plot", "create_subplots", rows, cols)
+End
+
+Define Function select_subplot Takes fig, row, col
+    Note: Select a subplot for plotting
+    Note: Example: Select subplot in my_figure at row 1 col 2
+    Return python_call("epl_plot", "select_subplot", fig, row, col)
+End
+
+Define Function show_plot Takes
+    Note: Display the current plot
+    Note: Example: Show plot
+    Return python_call("epl_plot", "show")
+End
+
+Define Function save_plot Takes filepath, dpi
+    Note: Save the current plot to a file
+    Note: Example: Save plot to "chart.png" with dpi 150
+    Return python_call("epl_plot", "savefig", filepath, dpi)
+End
+
+Define Function close_plot Takes
+    Note: Close the current plot
+    Note: Example: Close plot
+    Return python_call("epl_plot", "close")
+End
+
+Define Function clear_plot Takes
+    Note: Clear the current plot
+    Note: Example: Clear plot
+    Return python_call("epl_plot", "clear")
+End
+
+Note: ===========================================================
+Note:  Line Plots
+Note: ===========================================================
+
+Define Function plot_line Takes x, y, lbl, color, style
+    Note: Create a line plot
+    Note: Example: Plot line x_values and y_values with label "data" color "blue" style "-"
+    Return python_call("epl_plot", "plot", x, y, lbl, color, style)
+End
+
+Define Function plot_lines Takes datasets
+    Note: Plot multiple lines from a list of {x, y, lbl, color} dicts
+    Note: Example: Plot lines [{"x": [...], "y": [...], "label": "A"}, ...]
+    Return python_call("epl_plot", "plot_multiple", datasets)
+End
+
+Define Function plot_function Takes func, x_min, x_max, num_points, label
+    Note: Plot a mathematical function
+    Note: Example: Plot function sin from -3.14 to 3.14 with 100 points label "sin(x)"
+    Return python_call("epl_plot", "plot_function", func, x_min, x_max, num_points, lbl)
+End
+
+Note: ===========================================================
+Note:  Scatter Plots
+Note: ===========================================================
+
+Define Function scatter_plot Takes x, y, lbl, color, size
+    Note: Create a scatter plot
+    Note: Example: Scatter plot x_vals and y_vals with label "points" color "red" size 50
+    Return python_call("epl_plot", "scatter", x, y, lbl, color, size)
+End
+
+Define Function scatter_with_colors Takes x, y, colors, colormap
+    Note: Create a scatter plot with color-coded points
+    Note: Example: Scatter with colors x and y colors values colormap "viridis"
+    Return python_call("epl_plot", "scatter_colors", x, y, colors, colormap)
+End
+
+Define Function scatter_with_sizes Takes x, y, sizes
+    Note: Create a scatter plot with variable point sizes
+    Note: Example: Scatter with sizes x and y sizes size_values
+    Return python_call("epl_plot", "scatter_sizes", x, y, sizes)
+End
+
+Note: ===========================================================
+Note:  Bar Charts
+Note: ===========================================================
+
+Define Function bar_chart Takes categories, values, lbl, color
+    Note: Create a vertical bar chart
+    Note: Example: Bar chart categories ["A", "B", "C"] values [10, 20, 15] label "sales" color "green"
+    Return python_call("epl_plot", "bar", categories, values, lbl, color)
+End
+
+Define Function horizontal_bar_chart Takes categories, values, lbl, color
+    Note: Create a horizontal bar chart
+    Note: Example: Horizontal bar chart categories ["A", "B"] values [10, 20] label "count" color "blue"
+    Return python_call("epl_plot", "barh", categories, values, lbl, color)
+End
+
+Define Function grouped_bar_chart Takes categories, datasets, labels, colors
+    Note: Create a grouped bar chart
+    Note: Example: Grouped bar chart categories with datasets [vals1, vals2] labels ["2023", "2024"]
+    Return python_call("epl_plot", "bar_grouped", categories, datasets, labels, colors)
+End
+
+Define Function stacked_bar_chart Takes categories, datasets, labels, colors
+    Note: Create a stacked bar chart
+    Note: Example: Stacked bar chart categories with datasets [vals1, vals2] labels ["A", "B"]
+    Return python_call("epl_plot", "bar_stacked", categories, datasets, labels, colors)
+End
+
+Note: ===========================================================
+Note:  Histograms
+Note: ===========================================================
+
+Define Function histogram Takes data, bins, lbl, color, alpha
+    Note: Create a histogram
+    Note: Example: Histogram data with 20 bins label "distribution" color "blue" alpha 0.7
+    Return python_call("epl_plot", "hist", data, bins, lbl, color, alpha)
+End
+
+Define Function histogram_2d Takes x, y, bins
+    Note: Create a 2D histogram (heatmap)
+    Note: Example: Histogram 2D x_data and y_data with 30 bins
+    Return python_call("epl_plot", "hist2d", x, y, bins)
+End
+
+Note: ===========================================================
+Note:  Pie Charts
+Note: ===========================================================
+
+Define Function pie_chart Takes values, labels, colors, explode
+    Note: Create a pie chart
+    Note: Example: Pie chart values [30, 20, 50] labels ["A", "B", "C"] colors ["red", "green", "blue"]
+    Return python_call("epl_plot", "pie", values, labels, colors, explode)
+End
+
+Define Function donut_chart Takes values, labels, colors
+    Note: Create a donut chart (pie with hole in center)
+    Note: Example: Donut chart values [30, 20, 50] labels ["A", "B", "C"]
+    Return python_call("epl_plot", "donut", values, labels, colors)
+End
+
+Note: ===========================================================
+Note:  Area & Fill Plots
+Note: ===========================================================
+
+Define Function area_plot Takes x, y, lbl, color, alpha
+    Note: Create a filled area plot
+    Note: Example: Area plot x and y with label "area" color "blue" alpha 0.5
+    Return python_call("epl_plot", "fill", x, y, lbl, color, alpha)
+End
+
+Define Function fill_between Takes x, y1, y2, lbl, color, alpha
+    Note: Fill area between two lines
+    Note: Example: Fill between x and y1 and y2 with label "range" color "gray" alpha 0.3
+    Return python_call("epl_plot", "fill_between", x, y1, y2, lbl, color, alpha)
+End
+
+Define Function stacked_area Takes x, datasets, labels, colors
+    Note: Create a stacked area chart
+    Note: Example: Stacked area x with datasets [y1, y2, y3] labels ["A", "B", "C"]
+    Return python_call("epl_plot", "stackplot", x, datasets, labels, colors)
+End
+
+Note: ===========================================================
+Note:  Box & Violin Plots
+Note: ===========================================================
+
+Define Function box_plot Takes data, labels
+    Note: Create a box plot
+    Note: Example: Box plot [data1, data2, data3] with labels ["A", "B", "C"]
+    Return python_call("epl_plot", "boxplot", data, labels)
+End
+
+Define Function violin_plot Takes data, labels
+    Note: Create a violin plot
+    Note: Example: Violin plot [data1, data2] with labels ["Group 1", "Group 2"]
+    Return python_call("epl_plot", "violinplot", data, labels)
+End
+
+Note: ===========================================================
+Note:  Heatmaps & Contours
+Note: ===========================================================
+
+Define Function heatmap Takes data, x_labels, y_labels, colormap, show_values
+    Note: Create a heatmap
+    Note: Example: Heatmap matrix with x_labels and y_labels colormap "hot" show_values True
+    Return python_call("epl_plot", "heatmap", data, x_labels, y_labels, colormap, show_values)
+End
+
+Define Function contour_plot Takes x, y, z, levels, colormap
+    Note: Create a contour plot
+    Note: Example: Contour plot x and y and z with 10 levels colormap "viridis"
+    Return python_call("epl_plot", "contour", x, y, z, levels, colormap)
+End
+
+Define Function filled_contour Takes x, y, z, levels, colormap
+    Note: Create a filled contour plot
+    Note: Example: Filled contour x and y and z with 10 levels colormap "plasma"
+    Return python_call("epl_plot", "contourf", x, y, z, levels, colormap)
+End
+
+Note: ===========================================================
+Note:  Error Bars
+Note: ===========================================================
+
+Define Function plot_with_error_bars Takes x, y, y_error, lbl, color
+    Note: Create a line plot with error bars
+    Note: Example: Plot with error bars x and y with y_error label "data" color "blue"
+    Return python_call("epl_plot", "errorbar", x, y, y_error, lbl, color)
+End
+
+Define Function bar_with_error Takes categories, values, errors, lbl, color
+    Note: Create a bar chart with error bars
+    Note: Example: Bar with error categories and values with errors label "mean" color "green"
+    Return python_call("epl_plot", "bar_error", categories, values, errors, lbl, color)
+End
+
+Note: ===========================================================
+Note:  Plot Customization - Titles & Labels
+Note: ===========================================================
+
+Define Function set_title Takes title, fontsize
+    Note: Set the plot title
+    Note: Example: Set title "My Chart" with fontsize 16
+    Return python_call("epl_plot", "title", title, fontsize)
+End
+
+Define Function set_x_label Takes lbl, fontsize
+    Note: Set the x-axis label
+    Note: Example: Set x label "Time (s)" with fontsize 12
+    Return python_call("epl_plot", "xlabel", lbl, fontsize)
+End
+
+Define Function set_y_label Takes lbl, fontsize
+    Note: Set the y-axis label
+    Note: Example: Set y label "Value" with fontsize 12
+    Return python_call("epl_plot", "ylabel", lbl, fontsize)
+End
+
+Define Function add_legend Takes location
+    Note: Add a legend to the plot
+    Note: Example: Add legend at location "upper right"
+    Return python_call("epl_plot", "legend", location)
+End
+
+Note: ===========================================================
+Note:  Plot Customization - Axes
+Note: ===========================================================
+
+Define Function set_x_limits Takes min_val, max_val
+    Note: Set x-axis limits
+    Note: Example: Set x limits from 0 to 100
+    Return python_call("epl_plot", "xlim", min_val, max_val)
+End
+
+Define Function set_y_limits Takes min_val, max_val
+    Note: Set y-axis limits
+    Note: Example: Set y limits from -10 to 10
+    Return python_call("epl_plot", "ylim", min_val, max_val)
+End
+
+Define Function set_x_ticks Takes positions, labels
+    Note: Set x-axis tick positions and labels
+    Note: Example: Set x ticks at [0, 5, 10] with labels ["start", "mid", "end"]
+    Return python_call("epl_plot", "xticks", positions, labels)
+End
+
+Define Function set_y_ticks Takes positions, labels
+    Note: Set y-axis tick positions and labels
+    Note: Example: Set y ticks at [0, 50, 100] with labels ["low", "med", "high"]
+    Return python_call("epl_plot", "yticks", positions, labels)
+End
+
+Define Function set_log_scale Takes axis
+    Note: Set logarithmic scale for an axis
+    Note: Example: Set log scale for "y" axis
+    Return python_call("epl_plot", "set_log", axis)
+End
+
+Define Function invert_axis Takes axis
+    Note: Invert an axis
+    Note: Example: Invert axis "y"
+    Return python_call("epl_plot", "invert_axis", axis)
+End
+
+Note: ===========================================================
+Note:  Plot Customization - Grid & Style
+Note: ===========================================================
+
+Define Function add_grid Takes show_flag, which, axis
+    Note: Add grid lines to the plot
+    Note: Example: Add grid True which "major" axis "both"
+    Return python_call("epl_plot", "grid", show_flag, which, axis)
+End
+
+Define Function set_style Takes style
+    Note: Set the plot style
+    Note: Example: Set style "seaborn" or "ggplot" or "dark_background"
+    Return python_call("epl_plot", "style", style)
+End
+
+Define Function set_colormap Takes colormap
+    Note: Set the default colormap
+    Note: Example: Set colormap "viridis"
+    Return python_call("epl_plot", "set_cmap", colormap)
+End
+
+Note: ===========================================================
+Note:  Annotations & Shapes
+Note: ===========================================================
+
+Define Function add_text Takes x, y, txt, fontsize, color
+    Note: Add text annotation at a position
+    Note: Example: Add text at 5 and 10 text "Peak" fontsize 12 color "red"
+    Return python_call("epl_plot", "text", x, y, txt, fontsize, color)
+End
+
+Define Function add_annotation Takes txt, xy, xytext, arrow
+    Note: Add annotation with optional arrow
+    Note: Example: Add annotation "Maximum" at xy [5, 10] xytext [6, 12] arrow True
+    Return python_call("epl_plot", "annotate", txt, xy, xytext, arrow)
+End
+
+Define Function add_horizontal_line Takes y, lbl, color, style
+    Note: Add a horizontal line
+    Note: Example: Add horizontal line at y 0 label "baseline" color "gray" style "--"
+    Return python_call("epl_plot", "axhline", y, lbl, color, style)
+End
+
+Define Function add_vertical_line Takes x, lbl, color, style
+    Note: Add a vertical line
+    Note: Example: Add vertical line at x 50 label "threshold" color "red" style "--"
+    Return python_call("epl_plot", "axvline", x, lbl, color, style)
+End
+
+Define Function add_horizontal_span Takes ymin, ymax, color, alpha
+    Note: Add a horizontal shaded region
+    Note: Example: Add horizontal span from ymin -1 to ymax 1 color "yellow" alpha 0.3
+    Return python_call("epl_plot", "axhspan", ymin, ymax, color, alpha)
+End
+
+Define Function add_vertical_span Takes xmin, xmax, color, alpha
+    Note: Add a vertical shaded region
+    Note: Example: Add vertical span from xmin 10 to xmax 20 color "gray" alpha 0.2
+    Return python_call("epl_plot", "axvspan", xmin, xmax, color, alpha)
+End
+
+Note: ===========================================================
+Note:  Color Utilities
+Note: ===========================================================
+
+Define Function get_color_palette Takes name, n
+    Note: Get a color palette
+    Note: Example: Get color palette "tab10" with 5 colors
+    Return python_call("epl_plot", "get_palette", name, n)
+End
+
+Define Function add_colorbar Takes lbl
+    Note: Add a colorbar to the current plot
+    Note: Example: Add colorbar with label "Temperature"
+    Return python_call("epl_plot", "colorbar", lbl)
+End

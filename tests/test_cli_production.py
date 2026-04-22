@@ -147,7 +147,7 @@ import sys
 sys.argv = ['main.py', 'demo.epl', '--interpret']
 module = importlib.import_module('main')
 print('|'.join(sys.argv))
-print(module._FORCE_INTERPRET)
+print(module._force_interpret())
 """
         result = subprocess.run(
             [sys.executable, "-c", script],

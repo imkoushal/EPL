@@ -1,0 +1,72 @@
+Note: EPL Array Package - Basic Example
+Note: Demonstrates array creation, operations, and statistics
+
+Use "epl-array"
+
+Say "======================================="
+Say "EPL Array Package Demo"
+Say "======================================="
+
+Note: Create arrays
+Say ""
+Say "--- Array Creation ---"
+Set numbers to create_array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+Say "Created array: " + numbers
+
+Set zeros to array_of_zeros([3, 3])
+Say "3x3 zeros matrix created"
+
+Set ones to array_of_ones([2, 4])
+Say "2x4 ones matrix created"
+
+Note: Array properties
+Say ""
+Say "--- Array Properties ---"
+Say "Shape: " + shape_of(numbers)
+Say "Size: " + size_of(numbers)
+Say "Dimensions: " + dimensions_of(numbers)
+
+Note: Statistics
+Say ""
+Say "--- Statistics ---"
+Say "Sum: " + sum_of_array(numbers)
+Say "Mean: " + mean_of_array(numbers)
+Say "Median: " + median_of_array(numbers)
+Say "Std Dev: " + std_of_array(numbers)
+Say "Min: " + min_of_array(numbers)
+Say "Max: " + max_of_array(numbers)
+
+Note: Math operations
+Say ""
+Say "--- Math Operations ---"
+Set squared to power_array(numbers, 2)
+Say "Squared: " + squared
+
+Set roots to sqrt_array(numbers)
+Say "Square roots: " + roots
+
+Note: Linear algebra
+Say ""
+Say "--- Linear Algebra ---"
+Set matrix to create_array([[1, 2], [3, 4]])
+Say "Matrix: " + matrix
+
+Set det to determinant_of(matrix)
+Say "Determinant: " + det
+
+Set inv to inverse_of(matrix)
+Say "Inverse computed"
+
+Note: Random arrays
+Say ""
+Say "--- Random Arrays ---"
+Set random_nums to random_array([5])
+Say "Random array: " + random_nums
+
+Set random_ints to random_integers(1, 100, [5])
+Say "Random integers: " + random_ints
+
+Say ""
+Say "======================================="
+Say "Demo complete!"
+Say "======================================="

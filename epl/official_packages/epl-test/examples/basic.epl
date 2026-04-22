@@ -1,4 +1,4 @@
-Import "epl-test"
+Use "epl-test"
 
 Call test("numbers", lambda -> expect_equal(2 + 2, 4, "two plus two"))
 

@@ -1886,30 +1886,49 @@ class Parser:
     # ─── v0.3: Use python library ────────────────────────
 
     def _parse_use(self):
-        """Use python "library" as alias"""
+        """Use "package" (EPL import) OR Use python "library" as alias"""
         line = self._current().line
         self._advance()  # consume USE
 
-        self._expect(TokenType.PYTHON, 'Expected "python" after "Use".')
-
-        lib_tok = self._current()
-        if lib_tok.type != TokenType.STRING:
-            raise ParserError('Expected library name string after "Use python".', line)
-        self._advance()
-        library = lib_tok.value
-
-        # Optional alias
-        alias = None
-        if self._match(TokenType.AS):
+        # Check if next token is "python" (Python library import)
+        # OR a string (EPL package import - new simpler syntax)
+        if self._match(TokenType.PYTHON):
+            # Original behavior: Use python "library"
+            self._advance()  # consume PYTHON
+            lib_tok = self._current()
+            if lib_tok.type != TokenType.STRING:
+                raise ParserError('Expected library name string after "Use python".', line)
             self._advance()
-            alias_tok = self._expect_identifier('Expected alias name after "as".')
-            alias = alias_tok.value
-        else:
-            # Use last part of module name as alias
-            alias = library.split('.')[-1]
+            library = lib_tok.value
 
-        self._end_statement()
-        return ast.UseStatement(library, alias, line)
+            # Optional alias
+            alias = None
+            if self._match(TokenType.AS):
+                self._advance()
+                alias_tok = self._expect_identifier('Expected alias name after "as".')
+                alias = alias_tok.value
+            else:
+                # Use last part of module name as alias
+                alias = library.split('.')[-1]
+
+            self._end_statement()
+            return ast.UseStatement(library, alias, line)
+        else:
+            # New syntax: Use "package" is equivalent to Import "package"
+            filepath_tok = self._current()
+            if filepath_tok.type != TokenType.STRING:
+                raise ParserError('Expected package name string after "Use".', line)
+            self._advance()
+
+            # Optional alias: Use "module" as Alias
+            alias = None
+            if self._current().type == TokenType.AS:
+                self._advance()  # consume AS
+                alias_tok = self._expect_identifier('Expected alias name after "as".')
+                alias = alias_tok.value
+
+            self._end_statement()
+            return ast.ImportStatement(filepath_tok.value, line, alias=alias)
 
     # ─── v0.3: Wait ──────────────────────────────────────
 
