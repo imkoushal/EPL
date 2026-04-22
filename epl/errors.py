@@ -50,7 +50,7 @@ ERROR_CODES = {
     'ImportError':      'E1300',
     'AttributeError':   'E1400',
     'AssertionError': 'E1500',
-    'AssertionError': 'E1500',
+    'AssertionError': 'E1500',  # backward compat alias
     'ConcurrencyError': 'E1600',
     'EPLError':         'E0000',
 }
@@ -238,7 +238,6 @@ class EPLError(Exception):
             'OverflowError': 'EPL Overflow Error',
             'ImportError': 'EPL Import Error',
             'AttributeError': 'EPL Attribute Error',
-            'AssertionError': 'EPL Assertion Error',
             'AssertionError': 'EPL Assertion Error',
             'ConcurrencyError': 'EPL Concurrency Error',
         }
@@ -443,14 +442,17 @@ class AttributeError(EPLError):
 
 
 class AssertionError(EPLError):
-    """Error for failed assertions."""
+    """Error for failed assertions.
+    
+    Note: The class name preserves the original 'AssertionError' spelling
+    for backward compatibility. AssertionError is the canonical alias.
+    """
     def format_message(self) -> str:
         return self._format_standard_message('EPL Assertion Error', include_traceback=True, include_hint=False)
 
 
-# Canonical correct spelling (alias for backward compatibility)
+# Aliases for backward compatibility
 AssertionError = AssertionError
-# Legacy alternate misspelling alias
 AssertationError = AssertionError
 
 
@@ -501,8 +503,7 @@ ERROR_CLASSES = {
     'OverflowError': OverflowError,
     'ImportError': ImportError,
     'AttributeError': AttributeError,
-    'AssertionError': AssertionError,   # backward compat (misspelled)
-    'AssertionError': AssertionError,    # canonical correct spelling
+    'AssertionError': AssertionError,
     'AssertationError': AssertionError,  # legacy alternate alias
     'ConcurrencyError': ConcurrencyError,
     'NotImplementedError': NotImplementedError,

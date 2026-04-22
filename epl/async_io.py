@@ -196,7 +196,7 @@ async def async_sleep(seconds):
 
 async def async_read_file(path):
     """Async file read using thread pool."""
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     def _read():
         with open(path, 'r', encoding='utf-8') as f:
             return f.read()
@@ -205,7 +205,7 @@ async def async_read_file(path):
 
 async def async_write_file(path, content):
     """Async file write using thread pool."""
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     def _write():
         with open(path, 'w', encoding='utf-8') as f:
             f.write(content)
@@ -215,7 +215,7 @@ async def async_write_file(path, content):
 async def async_http_get(url):
     """Async HTTP GET using urllib (no external deps)."""
     import urllib.request
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     def _get():
         with urllib.request.urlopen(url, timeout=30) as resp:
             return resp.read().decode('utf-8')
@@ -226,7 +226,7 @@ async def async_http_post(url, data):
     """Async HTTP POST."""
     import urllib.request
     import json as _json
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     def _post():
         payload = _json.dumps(data).encode('utf-8')
         req = urllib.request.Request(url, data=payload, headers={'Content-Type': 'application/json'})
