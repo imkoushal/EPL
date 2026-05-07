@@ -321,6 +321,25 @@ class EPLError(Exception):
         """Return structured error data as a JSON string."""
         return json.dumps(self.to_dict(), indent=2)
 
+    def to_context_dict(self) -> dict:
+        """Return structured context for the error explainer and AI consumption.
+
+        Extends to_dict() with the actual source line at the error location
+        and a few surrounding lines for context. Used by epl.error_explainer.
+        """
+        d = self.to_dict()
+        source_lines = _get_source_lines()
+        if self.line and source_lines and 0 < self.line <= len(source_lines):
+            d["source_line"] = source_lines[self.line - 1]
+            # Include ±2 lines of surrounding context
+            start = max(0, self.line - 3)
+            end = min(len(source_lines), self.line + 2)
+            d["context"] = "\n".join(
+                f"{'>' if i == self.line - 1 else ' '} {i + 1}: {source_lines[i]}"
+                for i in range(start, end)
+            )
+        return d
+
 
 # ═══════════════════════════════════════════════════════════
 #  Compilation Phase Errors

@@ -209,12 +209,15 @@ epl test [dir]            # Run test suite
 epl check [file]          # Static type checking
 epl fmt <file>            # Format source code
 epl lint [file]           # Lint source code
+epl fix <file.epl>        # Diagnose errors with AI-powered suggestions
 epl android <file.epl>    # Generate Android project
 epl ios <file.epl>        # Generate iOS project
 epl desktop <file.epl>    # Generate desktop app
 epl install <package>     # Install a package
 epl upgrade               # Update EPL
 ```
+
+> **Tip:** Use `epl run <file> --ai-errors` to see rich error explanations when a program fails.
 
 ---
 
@@ -227,7 +230,7 @@ epl upgrade               # Update EPL
 | **Web** | HTTP router, WebSocket, WSGI/ASGI, middleware, sessions, templates |
 | **Database** | SQLite ORM, Redis, PostgreSQL, Store/Fetch/Delete English APIs |
 | **Security** | Safe FFI sandbox, pickle allowlist, recursion limits, scope depth limits |
-| **Tooling** | LSP server, debugger, REPL, test framework, code coverage, formatter |
+| **Tooling** | LSP server, debugger, REPL, test framework, code coverage, formatter, **error explainer** |
 | **Targets** | Interpreter, VM, LLVM native, JavaScript, Node.js, Kotlin, Python, WASM, MicroPython |
 | **Packaging** | SemVer package manager, lockfiles, checksums, PyPI integration |
 | **AI** | Built-in `ai` module, Web Playground AST-Aware Copilot, Dual "Thinking" Mode via Groq/Gemini |
@@ -288,6 +291,7 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md) for the list of contributors.
 - [x] VS Code extension
 - [x] Official documentation website
 - [x] Online playground (try EPL in browser with AST-Aware AI Copilot)
+- [x] AI-powered error explainer with `epl fix` and `--ai-errors`
 - [ ] Community package registry
 - [ ] iOS transpiler
 - [ ] EPL Notebook (Jupyter-style)

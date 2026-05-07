@@ -75,6 +75,7 @@ Source Code (.epl)
 | Test Framework | `epl/test_framework.py` | Built-in testing: `Assert`, `AssertEqual`, `AssertThrows` |
 | Doc/Linter | `epl/doc_linter.py` | Documentation generator and code linter |
 | AI Assistant | `epl/ai.py` | Code generation, explanation, and AI-assisted development |
+| Error Explainer | `epl/error_explainer.py` | Pattern-based error diagnosis with structured explanations, "Did you mean?" suggestions, and optional AI enhancement |
 | Type System | `epl/type_system.py` | Optional type annotations and static type checking |
 | Standard Library | `epl/stdlib.py` | Built-in math, string, collection, and utility functions |
 
@@ -222,6 +223,7 @@ Primary commands:
 | `init` | Initialize package with `epl.toml` (`epl.json` legacy fallback) |
 | `install <pkg>` | Install dependency via package manager |
 | `package <file.epl>` | Build standalone binary via packager |
+| `fix <file.epl>` | Run code with AI-powered error diagnostics |
 
 ## Test Suite
 
@@ -234,7 +236,8 @@ Primary commands:
 | Bytecode VM | `tests/test_vm.py` | 43 | VM execution + all optimizations |
 | Package Manager | `tests/test_package_manager.py` | 91 | SemVer, dependencies, lockfiles, publish, validation |
 | Stability | `tests/test_stability.py` | 42 | Edge cases, error handling, overflow protection, short-circuit logic |
-| **Total** | | **547** | |
+| Error Explainer | `tests/test_error_explainer.py` | 48 | Error pattern matching, formatting, edge cases, context dict |
+| **Total** | | **595** | |
 
 ## Directory Layout
 
@@ -266,6 +269,7 @@ EPL/
 │   ├── gui.py               Desktop GUI
 │   ├── html_gen.py          HTML generation
 │   ├── ai.py                AI assistant
+│   ├── error_explainer.py   Error diagnosis and explanation engine
 │   ├── database.py          Database ORM
 │   ├── networking.py        HTTP / sockets
 │   ├── async_io.py          Async support

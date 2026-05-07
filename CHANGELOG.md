@@ -2,6 +2,26 @@
 
 All notable changes to EPL are documented in this file.
 
+## [Unreleased]
+
+### Added
+- **Error Explainer Module** — New `epl/error_explainer.py` providing rich, structured error diagnostics
+  - 27 pattern matchers covering NameError, ParserError, TypeError, RuntimeError, ImportError categories
+  - "Did you mean?" suggestions for undefined variables and functions using `difflib`
+  - Foreign keyword detection — recognizes Python (`print`, `def`, `for`) and JavaScript (`let`, `const`, `var`) syntax mistakes and suggests EPL equivalents
+  - Block analysis for unclosed blocks — identifies which specific `If`/`Function`/`While`/`Class` block was never closed
+  - Structured `ErrorExplanation` dataclass with `what_went_wrong`, `how_to_fix`, and `corrected_code`
+  - Rich ANSI-colored terminal formatting via `format_explanation()`
+  - Optional AI enhancement — hooks into existing `epl.ai` for deeper analysis when available
+- **`epl fix <file.epl>` command** — New CLI command that runs code and shows AI-powered diagnostics on error
+- **`--ai-errors` flag** — Enables error explanations when running `epl run <file> --ai-errors`
+- **`EPLError.to_context_dict()`** — New method on the error base class providing source-aware error context for the explainer
+
+### Changed
+- **`_offer_ai_explanation()`** in `runtime_support.py` — Now uses the new `error_explainer` module as the primary diagnosis engine, with fallback to raw AI
+- **`run_file()`** — Now accepts `ai_errors` parameter to control error explanation behavior
+
+
 ## [7.4.3] — 2026-04-17
 
 ### Added
