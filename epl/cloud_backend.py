@@ -17,9 +17,8 @@ credentials programmatically.
 
 from __future__ import annotations
 
-import os as _os
-import sys as _sys
 import logging as _logging
+import os as _os
 import threading as _threading
 
 from epl.errors import RuntimeError as EPLRuntimeError
@@ -42,6 +41,7 @@ def _ensure_boto3():
             return _boto3
         try:
             import boto3
+
             _boto3 = boto3
             return _boto3
         except ImportError:
@@ -54,11 +54,11 @@ def _ensure_boto3():
 
 # ─── Internal client cache ────────────────────────────────
 
-_clients = {}          # service_name -> boto3.client
+_clients = {}  # service_name -> boto3.client
 _client_lock = _threading.Lock()
 _config = {
     'region': _os.environ.get('AWS_DEFAULT_REGION', 'us-east-1'),
-    'access_key': None,   # None = defer to env / instance role
+    'access_key': None,  # None = defer to env / instance role
     'secret_key': None,
 }
 
@@ -90,6 +90,7 @@ def _invalidate_clients():
 #  Configuration
 # ═══════════════════════════════════════════════════════════
 
+
 def cloud_configure(region=None, access_key=None, secret_key=None):
     """Configure AWS credentials and region programmatically."""
     if region is not None:
@@ -106,6 +107,7 @@ def cloud_configure(region=None, access_key=None, secret_key=None):
 #  S3 — Object Storage
 # ═══════════════════════════════════════════════════════════
 
+
 def cloud_s3_upload(bucket: str, key: str, file_path: str):
     """Upload a local file to an S3 bucket."""
     s3 = _get_client('s3')
@@ -117,7 +119,12 @@ def cloud_s3_download(bucket: str, key: str, file_path: str):
     """Download an object from S3 to a local file."""
     s3 = _get_client('s3')
     s3.download_file(str(bucket), str(key), str(file_path))
-    return {'bucket': str(bucket), 'key': str(key), 'file_path': str(file_path), 'status': 'downloaded'}
+    return {
+        'bucket': str(bucket),
+        'key': str(key),
+        'file_path': str(file_path),
+        'status': 'downloaded',
+    }
 
 
 def cloud_s3_list(bucket: str, prefix: str = ''):
@@ -130,11 +137,13 @@ def cloud_s3_list(bucket: str, prefix: str = ''):
     paginator = s3.get_paginator('list_objects_v2')
     for page in paginator.paginate(**kwargs):
         for obj in page.get('Contents', []):
-            results.append({
-                'key': obj['Key'],
-                'size': obj['Size'],
-                'last_modified': obj['LastModified'].isoformat(),
-            })
+            results.append(
+                {
+                    'key': obj['Key'],
+                    'size': obj['Size'],
+                    'last_modified': obj['LastModified'].isoformat(),
+                }
+            )
     return results
 
 
@@ -167,7 +176,8 @@ def cloud_s3_write_text(bucket: str, key: str, content: str):
     """Write a string directly to an S3 object."""
     s3 = _get_client('s3')
     s3.put_object(
-        Bucket=str(bucket), Key=str(key),
+        Bucket=str(bucket),
+        Key=str(key),
         Body=str(content).encode('utf-8'),
         ContentType='text/plain; charset=utf-8',
     )
@@ -177,6 +187,7 @@ def cloud_s3_write_text(bucket: str, key: str, content: str):
 # ═══════════════════════════════════════════════════════════
 #  S3 — Bucket Operations
 # ═══════════════════════════════════════════════════════════
+
 
 def cloud_s3_create_bucket(bucket: str):
     """Create a new S3 bucket."""
@@ -203,9 +214,11 @@ def cloud_s3_list_buckets():
 #  Lambda — Serverless Functions
 # ═══════════════════════════════════════════════════════════
 
+
 def cloud_lambda_invoke(function_name: str, payload=None):
     """Invoke an AWS Lambda function."""
     import json as _json
+
     lam = _get_client('lambda')
     invoke_kwargs = {
         'FunctionName': str(function_name),
@@ -233,6 +246,7 @@ def cloud_lambda_invoke(function_name: str, payload=None):
 #  SQS — Message Queues
 # ═══════════════════════════════════════════════════════════
 
+
 def cloud_sqs_send(queue_url: str, message: str):
     """Send a message to an SQS queue."""
     sqs = _get_client('sqs')
@@ -244,10 +258,15 @@ def cloud_sqs_receive(queue_url: str, max_messages: int = 1):
     """Receive messages from an SQS queue."""
     sqs = _get_client('sqs')
     response = sqs.receive_message(
-        QueueUrl=str(queue_url), MaxNumberOfMessages=int(max_messages),
+        QueueUrl=str(queue_url),
+        MaxNumberOfMessages=int(max_messages),
     )
     return [
-        {'message_id': msg['MessageId'], 'body': msg['Body'], 'receipt_handle': msg['ReceiptHandle']}
+        {
+            'message_id': msg['MessageId'],
+            'body': msg['Body'],
+            'receipt_handle': msg['ReceiptHandle'],
+        }
         for msg in response.get('Messages', [])
     ]
 
