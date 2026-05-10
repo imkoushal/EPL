@@ -130,7 +130,7 @@ _SYNTAX_SECTIONS = [
         "examples": [
             'Enum Color Red, Green, Blue',
             'Set picked to Color.Red',
-            'Set label = "big" if x > 10 otherwise "small"',
+            'Set result to "big" if x > 10 otherwise "small"',
         ],
     },
     {

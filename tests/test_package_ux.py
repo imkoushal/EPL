@@ -496,26 +496,23 @@ def test_install_signature():
 # ══════════════════════════════════════════════════════════
 
 def test_main_install_cli():
-    print("\n=== 10. main.py Install CLI ===")
+    print("\n=== 10. Install CLI ===")
+    import inspect
+    from epl import cli
 
-    try:
-        with open(os.path.join(os.path.dirname(__file__), '..', 'main.py'), 'r') as f:
-            main_src = f.read()
-    except FileNotFoundError:
-        check("main.py readable", False)
-        return
+    install_src = inspect.getsource(cli._pkg_install)
 
-    # T1: main.py install supports --local flag
-    check("main.py supports --local", '--local' in main_src)
+    # T1: install supports --local flag
+    check("install supports --local", '--local' in install_src)
 
-    # T2: main.py install supports --no-save flag
-    check("main.py supports --no-save", '--no-save' in main_src)
+    # T2: install supports --no-save flag
+    check("install supports --no-save", '--no-save' in install_src)
 
-    # T3: main.py passes save param
-    check("main.py passes save param", 'save=' in main_src)
+    # T3: install passes save param
+    check("install passes save param", 'save=' in install_src)
 
-    # T4: main.py passes local param
-    check("main.py passes local param", 'local=' in main_src)
+    # T4: install passes local param
+    check("install passes local param", 'local=' in install_src)
 
 
 # ══════════════════════════════════════════════════════════

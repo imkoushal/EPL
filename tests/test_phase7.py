@@ -1464,32 +1464,32 @@ class TestResolveCommand(unittest.TestCase):
         source = inspect.getsource(main_module.main)
         self.assertIn("cli_main", source)
 
-    def test_resolve_legacy_dispatcher(self):
-        """Verify the resolve command remains available in the legacy dispatcher."""
-        import main as main_module
+    def test_resolve_authoritative_dispatcher(self):
+        """Verify the resolve command remains available in the authoritative dispatcher."""
+        from epl.cli import cli_main
         import inspect
-        source = inspect.getsource(main_module.legacy_main)
+        source = inspect.getsource(cli_main)
         self.assertIn("'resolve'", source)
 
-    def test_workspace_legacy_dispatcher(self):
-        """Verify the workspace command remains available in the legacy dispatcher."""
-        import main as main_module
+    def test_workspace_authoritative_dispatcher(self):
+        """Verify the workspace command remains available in the authoritative dispatcher."""
+        from epl.cli import cli_main
         import inspect
-        source = inspect.getsource(main_module.legacy_main)
+        source = inspect.getsource(cli_main)
         self.assertIn("'workspace'", source)
 
-    def test_ci_legacy_dispatcher(self):
-        """Verify the ci command remains available in the legacy dispatcher."""
-        import main as main_module
+    def test_ci_authoritative_dispatcher(self):
+        """Verify the ci command remains available in the authoritative dispatcher."""
+        from epl.cli import cli_main
         import inspect
-        source = inspect.getsource(main_module.legacy_main)
+        source = inspect.getsource(cli_main)
         self.assertIn("'ci'", source)
 
-    def test_sync_index_legacy_dispatcher(self):
-        """Verify the sync-index command remains available in the legacy dispatcher."""
-        import main as main_module
+    def test_sync_index_authoritative_dispatcher(self):
+        """Verify the sync-index command remains available in the authoritative dispatcher."""
+        from epl.cli import cli_main
         import inspect
-        source = inspect.getsource(main_module.legacy_main)
+        source = inspect.getsource(cli_main)
         self.assertIn("'sync-index'", source)
 
 

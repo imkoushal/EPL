@@ -25,20 +25,38 @@ CROSS_TARGETS = {
 }
 
 
-def _offer_ai_explanation(error_msg: str, source_code: Optional[str] = None) -> None:
-    try:
-        from epl.ai import explain_error, is_available
+def _offer_ai_explanation(error_msg, source_code: Optional[str] = None) -> None:
+    """Show rich error explanation using the error_explainer module.
 
-        if not is_available():
-            return
-        print("\n  ─ AI Error Explanation ───────────────────────────────", file=sys.stderr)
-        explanation = explain_error(error_msg, source_code)
-        if explanation:
-            for line in explanation.split("\n"):
-                print(f"  {line}", file=sys.stderr)
-        print("  ──────────────────────────────────────────────────────", file=sys.stderr)
+    Provides pattern-based diagnostics (always), plus optional AI analysis
+    when an AI backend (Ollama or cloud) is available.
+    """
+    try:
+        from epl.error_explainer import explain, format_explanation
+
+        # Accept either an EPLError instance or a plain string
+        if isinstance(error_msg, EPLError):
+            error = error_msg
+        else:
+            error = EPLError(str(error_msg))
+
+        exp = explain(error, source=source_code, ai=True)
+        print(format_explanation(exp), file=sys.stderr)
     except Exception:
-        pass
+        # Fallback: try the basic AI explain if the explainer fails
+        try:
+            from epl.ai import explain_error, is_available
+
+            if not is_available():
+                return
+            print("\n  \u2500 AI Error Explanation \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", file=sys.stderr)
+            explanation = explain_error(str(error_msg), source_code)
+            if explanation:
+                for line in explanation.split("\n"):
+                    print(f"  {line}", file=sys.stderr)
+            print("  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", file=sys.stderr)
+        except Exception:
+            pass
 
 
 def run_source(
@@ -115,6 +133,7 @@ def run_file(
     safe_mode: bool = False,
     force_interpret: bool = False,
     json_errors: bool = False,
+    ai_errors: bool = False,
 ) -> bool:
     if not os.path.exists(filepath):
         raise FileNotFoundError(filepath)
@@ -158,7 +177,7 @@ def run_file(
         source,
         interpreter,
         filepath,
-        ai_help=True,
+        ai_help=ai_errors,
         strict=strict,
         safe_mode=safe_mode,
         json_errors=json_errors,

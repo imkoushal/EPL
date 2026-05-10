@@ -515,20 +515,19 @@ def test_site_generator():
 def test_integration():
     print("\n=== 4.5 Integration Tests ===")
 
-    # T1: CLI 'site' command exists in main.py
-    import importlib
-    main_path = os.path.join(os.path.dirname(__file__), '..', 'main.py')
-    with open(main_path, 'r', encoding='utf-8') as f:
-        main_source = f.read()
-    check("CLI has 'site' command", "command == 'site'" in main_source)
-    check("CLI has 'search' command", "command == 'search'" in main_source)
-    check("CLI has 'publish' command", "command == 'publish'" in main_source)
-    check("CLI has 'info' command", "command == 'info'" in main_source)
-    check("CLI has 'stats' command", "command == 'stats'" in main_source)
+    # T1: CLI commands exist in the authoritative epl.cli dispatcher
+    import inspect
+    from epl import cli
+    cli_source = inspect.getsource(cli.cli_main)
+    check("CLI has 'site' command", "'site':" in cli_source)
+    check("CLI has 'search' command", "'search':" in cli_source)
+    check("CLI has 'publish' command", "'publish':" in cli_source)
+    check("CLI has 'info' command", "'info':" in cli_source)
+    check("CLI has 'stats' command", "'stats':" in cli_source)
 
     # T2: site command imports site_generator
     check("Site command uses site_generator",
-          'from epl.site_generator import generate_site' in main_source)
+          'from epl.site_generator import generate_site' in inspect.getsource(cli._site))
 
     # T3: Registry integrates with package manager
     from epl.package_manager import BUILTIN_REGISTRY
@@ -1401,33 +1400,19 @@ def test_publish_workflow():
 def test_cli_commands():
     print("\n=== 4.13 CLI Commands ===")
 
-    # Read main.py source to check commands exist
-    main_path = os.path.join(os.path.dirname(__file__), '..', 'main.py')
-    with open(main_path, 'r', encoding='utf-8') as f:
-        main_src = f.read()
+    # Check the authoritative epl.cli command dispatcher.
+    import inspect
+    from epl import cli
+    cli_src = inspect.getsource(cli.cli_main)
 
     # T1-T14: Check all CLI commands exist
     commands = [
-        ('init', "command == 'init'"),
-        ('install', "command == 'install'"),
-        ('uninstall', "command == 'uninstall'"),
-        ('packages', "command == 'packages'"),
-        ('search', "command == 'search'"),
-        ('publish', "command == 'publish'"),
-        ('info', "command == 'info'"),
-        ('stats', "command == 'stats'"),
-        ('add', "command == 'add'"),
-        ('remove', "command == 'remove'"),
-        ('lock', "command == 'lock'"),
-        ('update', "command == 'update'"),
-        ('tree', "command == 'tree'"),
-        ('outdated', "command == 'outdated'"),
-        ('audit', "command == 'audit'"),
-        ('migrate', "command == 'migrate'"),
-        ('cache', "command == 'cache'"),
+        'init', 'install', 'uninstall', 'packages', 'search', 'publish',
+        'info', 'stats', 'add', 'remove', 'lock', 'update', 'tree',
+        'outdated', 'audit', 'migrate', 'cache',
     ]
-    for cmd_name, pattern in commands:
-        check(f"CLI '{cmd_name}' command exists", pattern in main_src)
+    for cmd_name in commands:
+        check(f"CLI '{cmd_name}' command exists", f"'{cmd_name}':" in cli_src)
 
     # T15: Package manager imports
     from epl.package_manager import (

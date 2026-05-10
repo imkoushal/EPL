@@ -365,12 +365,32 @@ def test_compile_file_function_exists():
 
 def test_build_command_uses_native():
     """The build command should route to native compilation."""
-    # Read main.py to verify command routing
-    main_path = os.path.join(os.path.dirname(__file__), '..', 'main.py')
-    with open(main_path, 'r') as f:
-        src = f.read()
-    # Build command should call compile_file
-    assert_in("compile_file(args[1]", src)
+    from epl import cli
+    from epl import runtime_support
+
+    calls = {}
+    original_compile_file = runtime_support.compile_file
+
+    def fake_compile_file(filename, opt_level=2, static=False, target=None):
+        calls.update({
+            "filename": filename,
+            "opt_level": opt_level,
+            "static": static,
+            "target": target,
+        })
+        return True
+
+    try:
+        runtime_support.compile_file = fake_compile_file
+        result = cli._build(["demo.epl", "--opt", "3", "--target", "linux-x64"], {}, "build")
+    finally:
+        runtime_support.compile_file = original_compile_file
+
+    assert_eq(result, 0)
+    assert_eq(calls["filename"], "demo.epl")
+    assert_eq(calls["opt_level"], 3)
+    assert_true(calls["static"])
+    assert_eq(calls["target"], "linux-x64")
 
 def test_runtime_c_exists():
     """runtime.c should exist for linking."""

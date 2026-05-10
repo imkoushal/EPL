@@ -305,7 +305,7 @@ def cli_main(argv=None):
     clean_args = []
     i = 0
     while i < len(argv):
-        if argv[i] in ('--strict', '--no-color', '--verbose', '--quiet', '--sandbox', '--interpret', '--json'):
+        if argv[i] in ('--strict', '--no-color', '--verbose', '--quiet', '--sandbox', '--interpret', '--json', '--ai-errors'):
             flags.add(argv[i])
         else:
             clean_args.append(argv[i])
@@ -396,6 +396,7 @@ def cli_main(argv=None):
         'ai':        lambda: _ai(rest),
         'gen':       lambda: _ai_gen(rest),
         'explain':   lambda: _ai_explain(rest),
+        'fix':       lambda: _fix_file(rest, flags),
         'package':   lambda: _package(rest),
         'cloud':     lambda: _cloud(rest),
         'train':     lambda: _train(rest),
@@ -467,7 +468,57 @@ def _run_file(args, flags):
         safe_mode='--sandbox' in flags,
         force_interpret='--interpret' in flags,
         json_errors='--json' in flags,
+        ai_errors='--ai-errors' in flags,
     ) else 1
+
+
+def _fix_file(args, flags):
+    """Run a file, catch errors, and show AI-powered fix suggestions.
+
+    Usage: epl fix <file.epl>
+    Always shows the error explainer output, with AI enhancement when available.
+    """
+    args = _resolve_target_args(args)
+    if not args:
+        print(f"{_red('Error:')} No file specified.")
+        print("Usage: epl fix <file.epl>")
+        return 1
+
+    filename = args[0]
+    if not os.path.isfile(filename):
+        print(f"{_red('Error:')} File not found: {filename}")
+        return 1
+
+    with open(filename, 'r', encoding='utf-8') as f:
+        source = f.read()
+
+    from epl.errors import EPLError, set_source_context
+    set_source_context(source, filename)
+
+    try:
+        from epl.lexer import Lexer
+        from epl.parser import Parser
+        from epl.interpreter import Interpreter
+
+        tokens = Lexer(source).tokenize()
+        program = Parser(tokens).parse()
+        interpreter = Interpreter()
+        interpreter.execute(program)
+        print(f"\n  {_green('[OK]')} No errors found in {_bold(filename)}")
+        return 0
+    except EPLError as exc:
+        print(f"\n{exc}", file=sys.stderr)
+
+        try:
+            from epl.error_explainer import explain, format_explanation
+            exp = explain(exc, source=source, ai=True)
+            print(format_explanation(exp), file=sys.stderr)
+        except Exception:
+            pass
+        return 1
+    except Exception as exc:
+        print(f"{_red('Error:')} {exc}", file=sys.stderr)
+        return 1
 
 
 # ─── New Project ──────────────────────────────────────────

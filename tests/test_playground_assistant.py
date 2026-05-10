@@ -6,6 +6,7 @@ from epl.copilot import analyze_code, assist_request
 from epl.lexer import Lexer
 from epl.parser import Parser
 from epl.playground import _PLAYGROUND_HTML, _assist_playground, _get_syntax_reference
+from epl.syntax_reference import get_syntax_sections
 
 
 def _assert_parses(source: str) -> None:
@@ -18,6 +19,12 @@ def test_syntax_reference_exposes_authoritative_sections():
 
     assert "Authoritative EPL syntax reference" in payload["text"]
     assert {"variables", "functions", "web"} <= section_ids
+
+
+def test_syntax_reference_examples_are_parseable():
+    for section in get_syntax_sections():
+        for example in section["examples"]:
+            _assert_parses(example)
 
 
 def test_analyze_code_reports_parser_diagnostics():
@@ -73,3 +80,23 @@ def test_docs_playground_routes_only_to_explicit_ai_providers():
     assert "requestGeminiAssistant" in html
     assert "requestProxyAssistant" in html
     assert "text.pollinations.ai" not in html
+
+
+def test_docs_playground_matches_current_runtime_contract():
+    html = Path("docs/playground.html").read_text(encoding="utf-8")
+
+    assert "eplang latest" in html
+    assert "v7.4.4" not in html
+    assert "epl.type_system" not in html
+    assert "Monkeypatch" not in html
+    assert 'mode: "epl"' in html
+    assert "JSON.stringify(eplCode)" in html
+    assert "JSON.stringify(code)" in html
+    assert "Installing eplang from PyPI" in html
+
+
+def test_docs_landing_page_advertises_current_playground_version():
+    html = Path("docs/index.html").read_text(encoding="utf-8")
+
+    assert "EPL v7.5.1 IS LIVE!" in html
+    assert "EPL v7.4.4 IS LIVE!" not in html

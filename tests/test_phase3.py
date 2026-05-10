@@ -536,25 +536,24 @@ end'''
 @_tracked_test
 def test_cli_dispatch():
     print("\n=== CLI Integration ===")
-    import importlib
+    import inspect
+    from epl import cli
 
-    # T77: main.py parse check
-    main_path = os.path.join(os.path.dirname(__file__), '..', 'main.py')
-    with open(main_path, 'r', encoding='utf-8') as f:
-        main_src = f.read()
+    # T77: authoritative CLI dispatch check
+    cli_src = inspect.getsource(cli.cli_main)
 
-    check("CLI: python command", "command == 'python'" in main_src)
-    check("CLI: playground command", "command == 'playground'" in main_src)
-    check("CLI: notebook command", "command == 'notebook'" in main_src)
-    check("CLI: blocks command", "command == 'blocks'" in main_src)
-    check("CLI: copilot command", "command == 'copilot'" in main_src)
+    check("CLI: python command", "'python':" in cli_src)
+    check("CLI: playground command", "'playground':" in cli_src)
+    check("CLI: notebook command", "'notebook':" in cli_src)
+    check("CLI: blocks command", "'blocks':" in cli_src)
+    check("CLI: copilot command", "'copilot':" in cli_src)
 
     # T82: Help text
-    check("Help: python", "Transpile to Python" in main_src)
-    check("Help: playground", "Web Playground" in main_src)
-    check("Help: notebook", "Notebook" in main_src)
-    check("Help: blocks", "Block Editor" in main_src)
-    check("Help: copilot", "Copilot" in main_src)
+    check("Help: python", "Transpile to Python" in cli.HELP)
+    check("Help: playground", "playground" in cli.HELP)
+    check("Help: notebook", "notebook" in cli.HELP)
+    check("Help: blocks", "visual block editor" in cli.HELP)
+    check("Help: copilot", "copilot" in cli.HELP)
 
 
 # ══════════════════════════════════════════════════════════

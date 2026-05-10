@@ -1529,6 +1529,15 @@ def test_vscode_extension():
     grammars = pkg.get('contributes', {}).get('grammars', [])
     check("Has grammar contribution", len(grammars) > 0)
 
+    # T4b: Marketplace package excludes generated/heavy artifacts
+    ignore_path = os.path.join(ext_dir, '.vscodeignore')
+    check("Has VS Code package ignore", os.path.exists(ignore_path))
+    if os.path.exists(ignore_path):
+        ignore_text = open(ignore_path, 'r', encoding='utf-8').read()
+        check("Package excludes node_modules", 'node_modules/**' in ignore_text)
+        check("Package excludes VSIX artifacts", '*.vsix' in ignore_text)
+        check("Package excludes large PDFs", 'epl QNA.pdf' in ignore_text)
+
     # T5: Has snippet contribution
     snippets = pkg.get('contributes', {}).get('snippets', [])
     check("Has snippet contribution", len(snippets) > 0)
@@ -1595,6 +1604,8 @@ def test_vscode_extension():
         check("extension.js has deactivate", 'deactivate' in content)
         check("extension.js has LSP", 'LanguageServer' in content or 'lsp' in content.lower())
         check("extension.js versioned activation log", 'EPL extension v' in content)
+        check("extension.js has robust command builder", 'function buildEplCommand' in content)
+        check("extension.js runs explicit run command", "['run', filePath]" in content)
         check("extension.js has formatFile", 'formatFile' in content or 'formatEPLFile' in content)
         check("extension.js has lintFile", 'lintFile' in content or 'lintEPLFile' in content)
         check("extension.js has profileFile", 'profileFile' in content or 'profileEPLFile' in content)

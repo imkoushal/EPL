@@ -293,9 +293,6 @@ def count_open_blocks(source: str) -> int:
 
 def legacy_main(argv=None):
     """Legacy command dispatcher retained while commands move into epl.cli."""
-    compatibility_commands = ('resolve', 'workspace', 'ci', 'sync-index')
-    _ = compatibility_commands
-
     from epl.cli import cli_main
 
     return cli_main(list(sys.argv[1:] if argv is None else argv))

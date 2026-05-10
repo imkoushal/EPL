@@ -431,6 +431,15 @@ STDLIB_FUNCTIONS = {
     'web_test_client', 'web_test_get', 'web_test_post',
     'web_upload_config', 'web_request_files',
     'web_send_file', 'web_response', 'web_url_for',
+
+    # ── Cloud (AWS — epl-cloud) ──
+    'cloud_configure',
+    'cloud_s3_upload', 'cloud_s3_download', 'cloud_s3_list',
+    'cloud_s3_delete', 'cloud_s3_exists',
+    'cloud_s3_read_text', 'cloud_s3_write_text',
+    'cloud_s3_create_bucket', 'cloud_s3_list_buckets',
+    'cloud_lambda_invoke',
+    'cloud_sqs_send', 'cloud_sqs_receive', 'cloud_sqs_delete',
 }
 
 
@@ -3977,6 +3986,12 @@ def call_stdlib(name, args, line):
         # ══════════════════════════════════════════════════
         if name.startswith('3d_'):
             return _call_3d(name, args, line)
+
+        # ══════════════════════════════════════════════════
+        #  Cloud (AWS — S3, Lambda, SQS)
+        # ══════════════════════════════════════════════════
+        if name.startswith('cloud_'):
+            return _call_cloud(name, args, line)
 
         raise EPLRuntimeError(f'Unknown stdlib function: {name}', line)
 
@@ -9480,3 +9495,97 @@ def _call_ds(name, args, line):
         return False
 
     raise EPLRuntimeError(f'Unknown data science function: {name}', line)
+
+
+# ═══════════════════════════════════════════════════════════
+#  Cloud (AWS — S3, Lambda, SQS)
+# ═══════════════════════════════════════════════════════════
+
+def _call_cloud(name, args, line):
+    """Dispatch cloud_* stdlib functions to the cloud_backend module."""
+    from epl import cloud_backend
+
+    if name == 'cloud_configure':
+        region = str(args[0]) if len(args) >= 1 else None
+        key = str(args[1]) if len(args) >= 2 else None
+        secret = str(args[2]) if len(args) >= 3 else None
+        return cloud_backend.cloud_configure(region, key, secret)
+
+    # S3 object operations
+    if name == 'cloud_s3_upload':
+        if len(args) < 3:
+            raise EPLRuntimeError('cloud_s3_upload(bucket, key, file_path) requires 3 arguments.', line)
+        return _to_epl_dict(cloud_backend.cloud_s3_upload(args[0], args[1], args[2]))
+
+    if name == 'cloud_s3_download':
+        if len(args) < 3:
+            raise EPLRuntimeError('cloud_s3_download(bucket, key, file_path) requires 3 arguments.', line)
+        return _to_epl_dict(cloud_backend.cloud_s3_download(args[0], args[1], args[2]))
+
+    if name == 'cloud_s3_list':
+        if len(args) < 1:
+            raise EPLRuntimeError('cloud_s3_list(bucket[, prefix]) requires at least 1 argument.', line)
+        prefix = str(args[1]) if len(args) >= 2 else ''
+        results = cloud_backend.cloud_s3_list(args[0], prefix)
+        return [_to_epl_dict(r) for r in results]
+
+    if name == 'cloud_s3_delete':
+        if len(args) < 2:
+            raise EPLRuntimeError('cloud_s3_delete(bucket, key) requires 2 arguments.', line)
+        return _to_epl_dict(cloud_backend.cloud_s3_delete(args[0], args[1]))
+
+    if name == 'cloud_s3_exists':
+        if len(args) < 2:
+            raise EPLRuntimeError('cloud_s3_exists(bucket, key) requires 2 arguments.', line)
+        return cloud_backend.cloud_s3_exists(args[0], args[1])
+
+    if name == 'cloud_s3_read_text':
+        if len(args) < 2:
+            raise EPLRuntimeError('cloud_s3_read_text(bucket, key[, encoding]) requires at least 2 arguments.', line)
+        encoding = str(args[2]) if len(args) >= 3 else 'utf-8'
+        return cloud_backend.cloud_s3_read_text(args[0], args[1], encoding)
+
+    if name == 'cloud_s3_write_text':
+        if len(args) < 3:
+            raise EPLRuntimeError('cloud_s3_write_text(bucket, key, content) requires 3 arguments.', line)
+        return _to_epl_dict(cloud_backend.cloud_s3_write_text(args[0], args[1], args[2]))
+
+    # S3 bucket operations
+    if name == 'cloud_s3_create_bucket':
+        if len(args) < 1:
+            raise EPLRuntimeError('cloud_s3_create_bucket(bucket) requires 1 argument.', line)
+        return _to_epl_dict(cloud_backend.cloud_s3_create_bucket(args[0]))
+
+    if name == 'cloud_s3_list_buckets':
+        results = cloud_backend.cloud_s3_list_buckets()
+        return [_to_epl_dict(r) for r in results]
+
+    # Lambda
+    if name == 'cloud_lambda_invoke':
+        if len(args) < 1:
+            raise EPLRuntimeError('cloud_lambda_invoke(function_name[, payload]) requires at least 1 argument.', line)
+        payload = args[1] if len(args) >= 2 else None
+        from epl.interpreter import EPLDict
+        if isinstance(payload, EPLDict):
+            payload = {k: _from_epl(v) for k, v in payload.data.items()}
+        return _to_epl_dict(cloud_backend.cloud_lambda_invoke(args[0], payload))
+
+    # SQS
+    if name == 'cloud_sqs_send':
+        if len(args) < 2:
+            raise EPLRuntimeError('cloud_sqs_send(queue_url, message) requires 2 arguments.', line)
+        return _to_epl_dict(cloud_backend.cloud_sqs_send(args[0], args[1]))
+
+    if name == 'cloud_sqs_receive':
+        if len(args) < 1:
+            raise EPLRuntimeError('cloud_sqs_receive(queue_url[, max_messages]) requires at least 1 argument.', line)
+        max_msg = int(args[1]) if len(args) >= 2 else 1
+        results = cloud_backend.cloud_sqs_receive(args[0], max_msg)
+        return [_to_epl_dict(r) for r in results]
+
+    if name == 'cloud_sqs_delete':
+        if len(args) < 2:
+            raise EPLRuntimeError('cloud_sqs_delete(queue_url, receipt_handle) requires 2 arguments.', line)
+        return _to_epl_dict(cloud_backend.cloud_sqs_delete(args[0], args[1]))
+
+    raise EPLRuntimeError(f'Unknown cloud function: {name}', line)
