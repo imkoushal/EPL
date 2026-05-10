@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -20,25 +20,36 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 #  1. Module structure tests
 # ═══════════════════════════════════════════════════════════
 
+
 class TestCloudModuleStructure(unittest.TestCase):
     """Verify the cloud domain is registered across all layers."""
 
     def test_cloud_functions_in_stdlib_functions_set(self):
         from epl.stdlib import STDLIB_FUNCTIONS
+
         expected = {
             'cloud_configure',
-            'cloud_s3_upload', 'cloud_s3_download', 'cloud_s3_list',
-            'cloud_s3_delete', 'cloud_s3_exists',
-            'cloud_s3_read_text', 'cloud_s3_write_text',
-            'cloud_s3_create_bucket', 'cloud_s3_list_buckets',
+            'cloud_s3_upload',
+            'cloud_s3_download',
+            'cloud_s3_list',
+            'cloud_s3_delete',
+            'cloud_s3_exists',
+            'cloud_s3_read_text',
+            'cloud_s3_write_text',
+            'cloud_s3_create_bucket',
+            'cloud_s3_list_buckets',
             'cloud_lambda_invoke',
-            'cloud_sqs_send', 'cloud_sqs_receive', 'cloud_sqs_delete',
+            'cloud_sqs_send',
+            'cloud_sqs_receive',
+            'cloud_sqs_delete',
         }
-        self.assertTrue(expected.issubset(STDLIB_FUNCTIONS),
-                        f"Missing: {expected - STDLIB_FUNCTIONS}")
+        self.assertTrue(
+            expected.issubset(STDLIB_FUNCTIONS), f'Missing: {expected - STDLIB_FUNCTIONS}'
+        )
 
     def test_cloud_domain_in_domain_map(self):
         from epl.stdlib_modules import DOMAIN_MAP
+
         self.assertIn('cloud', DOMAIN_MAP)
         self.assertIn('cloud_s3_upload', DOMAIN_MAP['cloud'])
         self.assertIn('cloud_lambda_invoke', DOMAIN_MAP['cloud'])
@@ -46,12 +57,14 @@ class TestCloudModuleStructure(unittest.TestCase):
 
     def test_cloud_domain_reverse_lookup(self):
         from epl.stdlib_modules import get_domain
+
         self.assertEqual(get_domain('cloud_s3_upload'), 'cloud')
         self.assertEqual(get_domain('cloud_lambda_invoke'), 'cloud')
         self.assertEqual(get_domain('cloud_sqs_send'), 'cloud')
 
     def test_cloud_stdlib_module_facade(self):
-        from epl.stdlib_modules.cloud import FUNCTIONS, DOCS, get_functions, describe
+        from epl.stdlib_modules.cloud import DOCS, FUNCTIONS, describe, get_functions
+
         self.assertIn('cloud_s3_upload', FUNCTIONS)
         self.assertIn('cloud_s3_upload', DOCS)
         self.assertEqual(FUNCTIONS, get_functions())
@@ -60,6 +73,7 @@ class TestCloudModuleStructure(unittest.TestCase):
 
     def test_cloud_in_registry_json(self):
         import json
+
         registry_path = REPO_ROOT / 'epl' / 'registry.json'
         registry = json.loads(registry_path.read_text(encoding='utf-8'))
         self.assertIn('epl-cloud', registry['packages'])
@@ -77,9 +91,9 @@ class TestCloudModuleStructure(unittest.TestCase):
     def test_epl_source_parses(self):
         from epl.lexer import Lexer
         from epl.parser import Parser
+
         pkg_root = REPO_ROOT / 'epl' / 'official_packages' / 'epl-cloud'
-        for epl_file in [pkg_root / 'src' / 'main.epl',
-                         pkg_root / 'examples' / 'basic.epl']:
+        for epl_file in [pkg_root / 'src' / 'main.epl', pkg_root / 'examples' / 'basic.epl']:
             with self.subTest(file=epl_file.name):
                 source = epl_file.read_text(encoding='utf-8')
                 tokens = Lexer(source).tokenize()
@@ -90,28 +104,33 @@ class TestCloudModuleStructure(unittest.TestCase):
 #  2. Backend unit tests (mocked boto3)
 # ═══════════════════════════════════════════════════════════
 
+
 class TestCloudBackend(unittest.TestCase):
     """Test cloud_backend.py functions with mocked boto3 clients."""
 
     def setUp(self):
         from epl import cloud_backend
+
         cloud_backend._clients.clear()
         cloud_backend._boto3 = None
 
     def _mock_boto3(self):
         from epl import cloud_backend
+
         mock_boto3 = MagicMock()
         cloud_backend._boto3 = mock_boto3
         return mock_boto3
 
     def test_configure_updates_region(self):
         from epl import cloud_backend
+
         cloud_backend.cloud_configure(region='eu-west-1')
         self.assertEqual(cloud_backend._config['region'], 'eu-west-1')
         cloud_backend.cloud_configure(region='us-east-1')
 
     def test_configure_invalidates_clients(self):
         from epl import cloud_backend
+
         self._mock_boto3()
         cloud_backend._get_client('s3')
         self.assertIn('s3', cloud_backend._clients)
@@ -121,6 +140,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_s3_upload_calls_boto3(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_s3 = mock_boto3.client.return_value
         result = cloud_backend.cloud_s3_upload('my-bucket', 'key.txt', '/tmp/file.txt')
@@ -129,6 +149,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_s3_download_calls_boto3(self):
         from epl import cloud_backend
+
         self._mock_boto3()
         mock_s3 = self._mock_boto3().client.return_value
         result = cloud_backend.cloud_s3_download('b', 'k', '/tmp/out.txt')
@@ -137,6 +158,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_s3_delete_calls_boto3(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_s3 = mock_boto3.client.return_value
         result = cloud_backend.cloud_s3_delete('b', 'k')
@@ -145,6 +167,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_s3_exists_true(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_s3 = mock_boto3.client.return_value
         mock_s3.head_object.return_value = {}
@@ -152,6 +175,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_s3_write_text(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_s3 = mock_boto3.client.return_value
         result = cloud_backend.cloud_s3_write_text('b', 'k', 'hello')
@@ -160,6 +184,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_s3_read_text(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_s3 = mock_boto3.client.return_value
         body_mock = MagicMock()
@@ -170,12 +195,14 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_lambda_invoke(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_lambda = mock_boto3.client.return_value
         payload_mock = MagicMock()
         payload_mock.read.return_value = b'{"result": 42}'
         mock_lambda.invoke.return_value = {
-            'StatusCode': 200, 'Payload': payload_mock,
+            'StatusCode': 200,
+            'Payload': payload_mock,
         }
         result = cloud_backend.cloud_lambda_invoke('my-func', {'key': 'val'})
         self.assertEqual(result['status_code'], 200)
@@ -183,6 +210,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_sqs_send(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_sqs = mock_boto3.client.return_value
         mock_sqs.send_message.return_value = {'MessageId': 'msg-123'}
@@ -191,6 +219,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_sqs_receive(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_sqs = mock_boto3.client.return_value
         mock_sqs.receive_message.return_value = {
@@ -204,6 +233,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_sqs_delete(self):
         from epl import cloud_backend
+
         mock_boto3 = self._mock_boto3()
         mock_sqs = mock_boto3.client.return_value
         result = cloud_backend.cloud_sqs_delete('https://queue.url', 'rh1')
@@ -212,6 +242,7 @@ class TestCloudBackend(unittest.TestCase):
 
     def test_missing_boto3_raises_helpful_error(self):
         from epl import cloud_backend
+
         cloud_backend._boto3 = None
         with patch.dict('sys.modules', {'boto3': None}):
             with patch('builtins.__import__', side_effect=ImportError('No module named boto3')):
@@ -224,19 +255,22 @@ class TestCloudBackend(unittest.TestCase):
 #  3. Stdlib dispatch tests
 # ═══════════════════════════════════════════════════════════
 
+
 class TestCloudStdlibDispatch(unittest.TestCase):
     """Verify call_stdlib routes cloud_* names correctly."""
 
     def test_unknown_cloud_function_raises(self):
-        from epl.stdlib import call_stdlib
         from epl.errors import RuntimeError as EPLRuntimeError
+        from epl.stdlib import call_stdlib
+
         with self.assertRaises(EPLRuntimeError) as ctx:
             call_stdlib('cloud_nonexistent', [], 1)
         self.assertIn('Unknown cloud function', str(ctx.exception))
 
     def test_cloud_s3_upload_requires_args(self):
-        from epl.stdlib import call_stdlib
         from epl.errors import RuntimeError as EPLRuntimeError
+        from epl.stdlib import call_stdlib
+
         with self.assertRaises(EPLRuntimeError):
             call_stdlib('cloud_s3_upload', [], 1)
         with self.assertRaises(EPLRuntimeError):
@@ -244,6 +278,7 @@ class TestCloudStdlibDispatch(unittest.TestCase):
 
     def test_cloud_configure_dispatches(self):
         from epl.stdlib import call_stdlib
+
         result = call_stdlib('cloud_configure', ['us-east-1'], 1)
         self.assertTrue(result)
 
@@ -251,6 +286,7 @@ class TestCloudStdlibDispatch(unittest.TestCase):
 # ═══════════════════════════════════════════════════════════
 #  4. pyproject.toml integration
 # ═══════════════════════════════════════════════════════════
+
 
 class TestCloudPyprojectIntegration(unittest.TestCase):
     def test_cloud_optional_dependency_exists(self):
