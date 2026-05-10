@@ -2,7 +2,7 @@
   "name": "epl-lang",
   "displayName": "EPL — English Programming Language",
   "description": "Syntax highlighting, real-time diagnostics, auto-completions, hover docs and run/check commands for EPL (.epl files)",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "publisher": "epl-lang",
   "license": "Apache-2.0",
   "icon": "icon.png",
@@ -109,6 +109,11 @@
         "command": "epl.profileFile",
         "title": "EPL: Profile Current File",
         "icon": "$(dashboard)"
+      },
+      {
+        "command": "epl.fixFile",
+        "title": "EPL: Fix Errors with AI",
+        "icon": "$(sparkle)"
       }
     ],
     "menus": {
@@ -122,6 +127,11 @@
           "command": "epl.lintFile",
           "when": "editorLangId == epl",
           "group": "navigation@2"
+        },
+        {
+          "command": "epl.fixFile",
+          "when": "editorLangId == epl",
+          "group": "navigation@3"
         }
       ]
     },

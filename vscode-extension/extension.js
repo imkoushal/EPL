@@ -110,6 +110,12 @@ function activate(context) {
         vscode.commands.executeCommand('epl.run');
     });
 
+    const fixFile = vscode.commands.registerCommand('epl.fixFile', () => {
+        const filePath = getActiveEPLFile();
+        if (!filePath) return;
+        runEplCommand('EPL AI Explainer', ['fix', filePath]);
+    });
+
     const formatFile = vscode.commands.registerCommand('epl.formatFile', () => {
         vscode.commands.executeCommand('epl.format');
     });
@@ -122,7 +128,8 @@ function activate(context) {
         compileFile,
         formatFile,
         lintFile,
-        profileFile
+        profileFile,
+        fixFile
     );
 
     // ── Status Bar ──────────────────────────────────────
