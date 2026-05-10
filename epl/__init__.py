@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING, Any
 __version__ = '7.5.1'
 __author__ = 'Abneesh Singh'
 __email__ = 'singhabneesh250@gmail.com'
-__license__ = 'MIT'
+__license__ = 'Apache 2.0'
 __copyright__ = 'Copyright (c) 2024–2026 Abneesh Singh'
 
 if TYPE_CHECKING:

@@ -7,7 +7,7 @@ name = "eplang"
 dynamic = ["version"]
 description = "EPL - English Programming Language: write code in plain English. Build apps, web servers, and more."
 readme = "README.md"
-license = "MIT"
+license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.9"
 authors = [{name = "Abneesh Singh", email = "singhabneesh250@gmail.com"}]
