@@ -2,9 +2,9 @@
   "name": "epl-lang",
   "displayName": "EPL — English Programming Language",
   "description": "Syntax highlighting, real-time diagnostics, auto-completions, hover docs and run/check commands for EPL (.epl files)",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "publisher": "epl-lang",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "icon": "icon.png",
   "galleryBanner": {
     "color": "#0f172a",
