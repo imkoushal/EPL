@@ -95,6 +95,7 @@ class TokenType(Enum):
     IMPORT = auto()
     USE = auto()
     PYTHON = auto()
+    JAVASCRIPT = auto()        # v8.0: JS/TS Bridge
     CONSTANT = auto()
     ASSERT = auto()
     WAIT = auto()
@@ -377,6 +378,7 @@ KEYWORDS = {
     "import": TokenType.IMPORT,
     "use": TokenType.USE,
     "python": TokenType.PYTHON,
+    "javascript": TokenType.JAVASCRIPT,
     "constant": TokenType.CONSTANT,
     "assert": TokenType.ASSERT,
     "wait": TokenType.WAIT,

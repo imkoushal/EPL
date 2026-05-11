@@ -334,6 +334,33 @@ class PythonModule:
         return f"<python module {self.name}>"
 
 
+class JSModule:
+    """Wraps a JavaScript module handle for use in EPL via the Node.js bridge."""
+    def __init__(self, bridge, handle, name):
+        self.bridge = bridge
+        self.handle = handle
+        self.name = name
+
+    def get_attr(self, attr_name):
+        """Get an attribute from the JS module. Returns JSModule for handles, else plain value."""
+        result = self.bridge.get_prop(self.handle, attr_name)
+        from epl.js_bridge import JSModuleHandle
+        if isinstance(result, JSModuleHandle):
+            return JSModule(self.bridge, result.handle, f"{self.name}.{attr_name}")
+        return result
+
+    def call_method(self, method_name, args):
+        """Call a method on the JS module."""
+        result = self.bridge.call(self.handle, method_name, args)
+        from epl.js_bridge import JSModuleHandle
+        if isinstance(result, JSModuleHandle):
+            return JSModule(self.bridge, result.handle, f"{self.name}.{method_name}(...)")
+        return result
+
+    def __repr__(self):
+        return f"<js module {self.name}>"
+
+
 class EPLLambda:
     """Runtime representation of a lambda expression."""
     def __init__(self, params, body_node, closure_env):
@@ -472,6 +499,7 @@ class Interpreter:
             ast.MatchStatement: self._exec_match,
             ast.ImportStatement: self._exec_import,
             ast.UseStatement: self._exec_use,
+            ast.UseJSStatement: self._exec_use_js,
             ast.WaitStatement: self._exec_wait,
             ast.ConstDeclaration: self._exec_const,
             ast.AssertStatement: self._exec_assert,
@@ -1835,6 +1863,23 @@ class Interpreter:
         wrapped = PythonModule(module, node.library)
         env.define_variable(node.alias, wrapped)
 
+    # ─── Use JavaScript Library ───────────────────────────
+
+    def _exec_use_js(self, node: ast.UseJSStatement, env: Environment):
+        """Execute Use javascript/typescript statement — loads a JS module via the Node bridge."""
+        if self.safe_mode:
+            raise EPLRuntimeError(
+                '"Use javascript" is not allowed in safe mode (--sandbox). '
+                'JavaScript FFI provides unrestricted system access.', node.line)
+        from epl.js_bridge import NodeBridge, NodeBridgeError
+        try:
+            bridge = NodeBridge.get_instance()
+            handle = bridge.require(node.library)
+            wrapped = JSModule(bridge, handle, node.library)
+            env.define_variable(node.alias, wrapped)
+        except NodeBridgeError as e:
+            raise EPLRuntimeError(str(e), node.line)
+
     # ─── Wait ─────────────────────────────────────────────
 
     def _exec_wait(self, node: ast.WaitStatement, env: Environment):
@@ -2113,6 +2158,9 @@ class Interpreter:
             return member
         if isinstance(obj, PythonModule):
             return self._call_python_method(obj, method, args, line)
+        if isinstance(obj, JSModule):
+            result = obj.call_method(method, args)
+            return result
 
         # v4.0: Static method call on class object: ClassName.staticMethod(args)
         if isinstance(obj, EPLClass):
@@ -2551,6 +2599,12 @@ class Interpreter:
                 return self._wrap_python_result(attr)
             raise EPLRuntimeError(f'Python module "{obj.name}" has no attribute "{prop}".', node.line)
 
+        if isinstance(obj, JSModule):
+            try:
+                return obj.get_attr(prop)
+            except Exception as e:
+                raise EPLRuntimeError(f'JS module "{obj.name}" error accessing "{prop}": {e}', node.line)
+
         raise EPLTypeError(f'{self._type_name(obj)} has no property "{prop}".', node.line)
 
     # ─── Binary & Unary ──────────────────────────────────
@@ -2674,6 +2728,7 @@ class Interpreter:
         if isinstance(value, EPLClass): return "class"
         if isinstance(value, EPLInstance): return value.klass.name
         if isinstance(value, PythonModule): return "python module"
+        if isinstance(value, JSModule): return "js module"
         if isinstance(value, EPLLambda): return "lambda"
         if isinstance(value, ast.FunctionDef): return "function"
         if isinstance(value, EPLFuture): return "future"
@@ -2700,6 +2755,7 @@ class Interpreter:
             return f"<{value.klass.name} instance>"
         if isinstance(value, EPLClass): return f"<class {value.name}>"
         if isinstance(value, PythonModule): return f"<python module {value.name}>"
+        if isinstance(value, JSModule): return f"<js module {value.name}>"
         if isinstance(value, EPLLambda): return repr(value)
         if isinstance(value, ast.FunctionDef): return f"<function {value.name}>"
         if isinstance(value, EPLFuture): return repr(value)

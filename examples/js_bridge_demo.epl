@@ -1,0 +1,42 @@
+# EPL JavaScript Bridge - Live Demo
+# Tests: Use javascript, method calls, property access
+
+# Test 1: Load Node.js built-in "path" module
+Use javascript "path" as path
+
+# Test 2: Call path.join()
+Create filepath equal to path.join("home", "user", "documents", "file.txt")
+Print "Path join result: " + filepath
+
+# Test 3: Call path.basename()
+Create filename equal to path.basename(filepath)
+Print "Basename: " + filename
+
+# Test 4: Get a property - path.sep
+Create separator equal to path.sep
+Print "Path separator: " + separator
+
+# Test 5: Load "os" module and call methods
+Use javascript "os" as os
+
+Create platform equal to os.platform()
+Print "Platform: " + platform
+
+Create hostname equal to os.hostname()
+Print "Hostname: " + hostname
+
+Create cpus equal to os.cpus()
+Print "Number of CPUs: " + length(cpus)
+
+# Test 6: Load "url" module
+Use javascript "url" as url
+
+Create parsed equal to url.parse("https://github.com/abneeshsingh21/EPL")
+Print "Protocol: " + parsed.protocol
+Print "Host: " + parsed.host
+Print "Path: " + parsed.pathname
+
+Print ""
+Print "======================================="
+Print "  All JS Bridge tests passed!"
+Print "======================================="

@@ -17,6 +17,9 @@ Usage:
     epl pyinstall <import> [spec] Install/save a Python package
     epl pyremove <import>        Remove a Python package declaration
     epl pydeps                   List Python ecosystem dependencies
+    epl jsinstall <pkg>          Install/save an npm package for `Use javascript`
+    epl jsremove <pkg>           Remove an npm package declaration
+    epl jsdeps                   List npm/JS dependencies
     epl github <cmd>             Clone/pull/push GitHub projects
     epl serve <file.epl>         Start production server
     epl ios <file.epl>           Generate iOS app project
@@ -91,6 +94,9 @@ HELP = f"""\
   epl pyinstall <import> [spec]    Install/save a Python package for `Use python`
   epl pyremove <import>            Remove a Python dependency declaration
   epl pydeps                       List declared Python dependencies
+  epl jsinstall <pkg>              Install/save an npm package for `Use javascript`
+  epl jsremove <pkg>               Remove an npm dependency declaration
+  epl jsdeps                       List declared npm/JS dependencies
   epl modules                      List standard library modules
   epl github clone <owner/repo> [dir]
   epl github pull [path]
@@ -349,6 +355,9 @@ def cli_main(argv=None):
         'pyinstall': lambda: _py_install(rest),
         'pyremove':  lambda: _py_remove(rest),
         'pydeps':    lambda: _py_list(),
+        'jsinstall': lambda: _js_install(rest),
+        'jsremove':  lambda: _js_remove(rest),
+        'jsdeps':    lambda: _js_list(),
         'modules':   lambda: _list_modules(),
         'github':    lambda: _github(rest),
         'init':      lambda: _init_project(rest),
@@ -1463,6 +1472,162 @@ def _py_list():
         print(f"  {import_name:20s} -> {display}")
     print()
     return 0
+
+
+# ─── JavaScript/TypeScript Bridge Commands ─────────────────
+
+def _js_install(args):
+    """Install an npm package and save to epl.toml [js-dependencies]."""
+    import shutil
+    import subprocess
+
+    npm = shutil.which('npm')
+    if not npm:
+        print(f"{_red('Error:')} npm is not installed or not found in PATH.")
+        print("Install Node.js from: https://nodejs.org/")
+        return 1
+
+    if not args:
+        # Install all declared JS dependencies
+        deps = _js_list_deps_raw()
+        if not deps:
+            print("  No JS dependencies declared in epl.toml.")
+            return 0
+        for pkg, version in deps:
+            spec = f"{pkg}@{version}" if version and version != '*' else pkg
+            print(f"  Installing {spec}...")
+            subprocess.run([npm, 'install', spec], cwd='.')
+        return 0
+
+    no_save = '--no-save' in args
+    clean_args = [a for a in args if a != '--no-save']
+    if not clean_args:
+        print(f"{_red('Error:')} No package name specified.")
+        print("Usage: epl jsinstall <package-name> [version]")
+        return 1
+
+    package = clean_args[0]
+    version = clean_args[1] if len(clean_args) > 1 else None
+    spec = f"{package}@{version}" if version else package
+
+    print(f"  Installing {spec}...")
+    result = subprocess.run([npm, 'install', spec, '--save'], cwd='.')
+    if result.returncode != 0:
+        print(f"{_red('Error:')} npm install failed.")
+        return 1
+
+    if not no_save:
+        _js_save_dep(package, version or '*')
+        print(f"  ✓ Saved \"{package}\" to epl.toml [js-dependencies]")
+    return 0
+
+
+def _js_remove(args):
+    """Remove an npm package from epl.toml [js-dependencies]."""
+    if not args:
+        print(f"{_red('Error:')} No npm package name specified.")
+        print("Usage: epl jsremove <package-name>")
+        return 1
+    package = args[0]
+    _js_remove_dep(package)
+    print(f"  ✓ Removed \"{package}\" from epl.toml [js-dependencies]")
+    return 0
+
+
+def _js_list():
+    """List declared JavaScript/npm dependencies."""
+    deps = _js_list_deps_raw()
+    if not deps:
+        print("  No JS dependencies declared.")
+        return 0
+
+    print(f"\n  {_bold('Declared JS Dependencies')} ({len(deps)}):")
+    print("  " + "-" * 40)
+    for pkg, version in deps:
+        display = pkg if version in ('', '*') else f"{pkg}@{version}"
+        print(f"  {pkg:30s} -> {display}")
+    print()
+    return 0
+
+
+def _js_list_deps_raw():
+    """Read JS deps from epl.toml, return [(pkg, version)] list."""
+    import os
+    toml_path = os.path.join('.', 'epl.toml')
+    if not os.path.isfile(toml_path):
+        return []
+    try:
+        with open(toml_path, 'r') as f:
+            content = f.read()
+    except OSError:
+        return []
+    # Simple TOML parser for [js-dependencies] section
+    deps = []
+    in_section = False
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped == '[js-dependencies]':
+            in_section = True
+            continue
+        if stripped.startswith('[') and in_section:
+            break
+        if in_section and '=' in stripped:
+            key, _, val = stripped.partition('=')
+            deps.append((key.strip().strip('"'), val.strip().strip('"')))
+    return deps
+
+
+def _js_save_dep(package, version):
+    """Add or update a JS dep in epl.toml [js-dependencies]."""
+    import os
+    toml_path = os.path.join('.', 'epl.toml')
+    if not os.path.isfile(toml_path):
+        with open(toml_path, 'w') as f:
+            f.write(f'[js-dependencies]\n"{package}" = "{version}"\n')
+        return
+    with open(toml_path, 'r') as f:
+        content = f.read()
+    if '[js-dependencies]' not in content:
+        content += f'\n[js-dependencies]\n"{package}" = "{version}"\n'
+    else:
+        lines = content.splitlines()
+        new_lines = []
+        in_section = False
+        found = False
+        for line in lines:
+            stripped = line.strip()
+            if stripped == '[js-dependencies]':
+                in_section = True
+                new_lines.append(line)
+                continue
+            if stripped.startswith('[') and in_section:
+                if not found:
+                    new_lines.append(f'"{package}" = "{version}"')
+                    found = True
+                in_section = False
+            if in_section and stripped.startswith(f'"{package}"'):
+                new_lines.append(f'"{package}" = "{version}"')
+                found = True
+                continue
+            new_lines.append(line)
+        if not found:
+            new_lines.append(f'"{package}" = "{version}"')
+        content = '\n'.join(new_lines)
+    with open(toml_path, 'w') as f:
+        f.write(content)
+
+
+def _js_remove_dep(package):
+    """Remove a JS dep from epl.toml [js-dependencies]."""
+    import os
+    toml_path = os.path.join('.', 'epl.toml')
+    if not os.path.isfile(toml_path):
+        return
+    with open(toml_path, 'r') as f:
+        lines = f.read().splitlines()
+    new_lines = [l for l in lines if not l.strip().startswith(f'"{package}"')]
+    with open(toml_path, 'w') as f:
+        f.write('\n'.join(new_lines) + '\n')
 
 
 def _github(args):

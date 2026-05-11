@@ -1886,11 +1886,13 @@ class Parser:
     # ─── v0.3: Use python library ────────────────────────
 
     def _parse_use(self):
-        """Use "package" (EPL import) OR Use python "library" as alias"""
+        """Use "package" (EPL import) OR Use python "library" as alias OR Use javascript/typescript "library" as alias"""
         line = self._current().line
         self._advance()  # consume USE
 
         # Check if next token is "python" (Python library import)
+        # OR "javascript" (JS library import)
+        # OR identifier "typescript" (TS library import)
         # OR a string (EPL package import - new simpler syntax)
         if self._match(TokenType.PYTHON):
             # Original behavior: Use python "library"
@@ -1913,6 +1915,31 @@ class Parser:
 
             self._end_statement()
             return ast.UseStatement(library, alias, line)
+        elif self._match(TokenType.JAVASCRIPT) or (
+            self._match_identifier() and self._current().value.lower() == 'typescript'
+        ):
+            # v8.0: Use javascript "library" / Use typescript "library"
+            is_typescript = self._current().value.lower() == 'typescript'
+            self._advance()  # consume JAVASCRIPT or typescript identifier
+            lib_tok = self._current()
+            if lib_tok.type != TokenType.STRING:
+                kw = 'typescript' if is_typescript else 'javascript'
+                raise ParserError(f'Expected library name string after "Use {kw}".', line)
+            self._advance()
+            library = lib_tok.value
+
+            # Optional alias
+            alias = None
+            if self._match(TokenType.AS):
+                self._advance()
+                alias_tok = self._expect_identifier('Expected alias name after "as".')
+                alias = alias_tok.value
+            else:
+                # Use last segment of package name, sanitized
+                alias = library.split('/')[-1].replace('-', '_').replace('.', '_')
+
+            self._end_statement()
+            return ast.UseJSStatement(library, alias, is_typescript, line)
         else:
             # New syntax: Use "package" is equivalent to Import "package"
             filepath_tok = self._current()
